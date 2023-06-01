@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Adam Kong",
@@ -12,12 +19,5 @@
     "title": "Adam Kong",
     "section": "Education",
     "text": "Education\nTemple City High School, California | Temple City, CA\nHigh School Diploma | August 2017 - June 2021\nCalifornia Polytechnic State University, California | San Luis Obispo, CA\nB. S. in Statistics | Actuary Prep Minor | August 2021 - June 2025"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
   }
 ]

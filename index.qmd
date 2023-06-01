@@ -1,8 +1,11 @@
 ---
 title: "Adam Kong"
+image: headshot.jpg
 about:
+  id: hero-heading
   template: solana
-  image: headshot.jpg
+  image-width: 10em
+  image-shape: round
   links:
     - text: LinkedIn
       href: https://www.linkedin.com/in/aakong/
