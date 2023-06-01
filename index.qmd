@@ -1,6 +1,6 @@
 ---
 title: "Adam Kong"
-image: headshot.jpg
+image: Headshot.jpg
 about:
   id: hero-heading
   template: solana
