@@ -1,11 +1,25 @@
 ---
-title: "Adam_AKong.github.io"
+title: "Adam A.Kong"
+about:
+  template: solana
+  image: headshot.jpg
+  links:
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/aakong/
+    - text: GitHub
+      href: github.com/Adam-AKong
+    - text: Email
+      href: aakong@calpoly.edu
 ---
 
-This is a Quarto website.
+Hello! My Name's Adam Kong. I am a second year Statistics major at California Polytechnic State University located in San Luis Obispo. I am currently working on graduating with a Statistics degree in 2025 with an Actuary Prep Minor.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+## Education
 
-```{r}
-1 + 1
-```
+Temple City High School, California \| Temple City, CA
+
+High School Diploma \| August 2017 - June 2021
+
+California Polytechnic State University, California \| San Luis Obispo, CA
+
+B. S. in Statistics \| Actuary Prep Minor \| August 2021 - June 2025
