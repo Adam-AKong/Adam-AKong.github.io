@@ -1,5 +1,5 @@
 ---
-title: "Adam A.Kong"
+title: "Adam Kong"
 about:
   template: solana
   image: headshot.jpg
