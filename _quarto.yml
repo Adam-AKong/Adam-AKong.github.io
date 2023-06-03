@@ -9,13 +9,11 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      - project.qmd
+      - projects.qmd
 
 format:
   html:
-    theme:
-      light: slate
-      dark: minty
+    theme: lux
     css: styles.css
     page-layout: full
 

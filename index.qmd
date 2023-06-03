@@ -3,26 +3,47 @@ title: "Adam Kong"
 image: Headshot.jpg
 about:
   id: hero-heading
-  template: solana
-  image-width: 10em
-  image-shape: round
+  template: jolla
+  image-width: 25em
+  image-shape: rectangle
   links:
     - text: LinkedIn
       href: https://www.linkedin.com/in/aakong/
     - text: GitHub
       href: github.com/Adam-AKong
     - text: Email
-      href: aakong@calpoly.edu
+      href: mailto::aakong@calpoly.edu
 ---
+
+::: {#hero-heading}
+### CV {sec-introduction}
 
 Hello! My Name's Adam Kong. I am a second year Statistics major at California Polytechnic State University located in San Luis Obispo. I am currently working on graduating with a Statistics degree in 2025 with an Actuary Prep Minor.
 
-## Education
+## Education {#sec-education}
 
 Temple City High School, California \| Temple City, CA
 
 High School Diploma \| August 2017 - June 2021
 
+------------------------------------------------------------------------
+
 California Polytechnic State University, California \| San Luis Obispo, CA
 
 B. S. in Statistics \| Actuary Prep Minor \| August 2021 - June 2025
+
+## Interests {#sec-interests}
+
+-   Sports
+    -   Tennis
+    -   Badminton
+    -   Baseball
+    -   Basketball
+    -   Swimming
+-   Hobbies
+    -   Computers
+    -   Gaming
+    -   Art
+    -   Reading
+    -   Sleeping
+:::
