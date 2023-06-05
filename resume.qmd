@@ -2,4 +2,4 @@
 title: "Resume"
 ---
 
-<embed src="Adam_Kong_Resume_PDF.pdf" type="application/pdf" style="width:100%;height:100vh;"/>
+<embed src="Adam_Kong_Resume.pdf" type="application/pdf" style="width:100%;height:100vh;"/>
