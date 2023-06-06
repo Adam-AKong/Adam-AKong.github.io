@@ -16,7 +16,7 @@ about:
 ---
 
 ::: {#hero-heading}
-### CV {sec-introduction}
+### Introdction {#sec-introduction}
 
 Hello! My Name's Adam Kong. I am a second year Statistics major at California Polytechnic State University located in San Luis Obispo. I am currently working on graduating with a Statistics degree in 2025 with an Actuary Prep Minor.
 
@@ -45,5 +45,4 @@ B. S. in Statistics \| Actuary Prep Minor \| August 2021 - June 2025
     -   Gaming
     -   Art
     -   Reading
-    -   Sleeping
 :::

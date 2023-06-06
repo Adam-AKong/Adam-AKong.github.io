@@ -1,0 +1,257 @@
+---
+title: "STAT 365: Copy the Masters"
+author: "Adam Kong"
+date: "2023-05-25"
+categories: [Projects]
+image: "image.png"
+execute:
+  echo: false
+---
+
+## STAT 365: Copy the Masters
+
+A report copying a graph on fivethirtyeight. My submission used a graph comparing the net favorability rate of Donald Trump to other Democratic candidates listed below. I have attached below what the graph should look like and a copy of the report. Although the graphs did not turn out correctly, I believe I understood the basic modifications and ideas from the project. This project was done completely in RStudio.
+
+![](Mehta.Pollapalooza.jpg)
+
+```         
+https://fivethirtyeight.com/features/the-democratic-presidential-candidates-are-becoming-less-popular/
+
+"The Democratic Presidential Candidates Are Becoming Less Popular"
+```
+
+## Graph Description
+
+The graph shows the net favorability of the five candidates running in the United States 2020 elections. The graph calculated the net favorability of one Republican candidate (Donald Trump) and four Democratic candidates (Joe Biden, Bernie Sanders, Elizabeth Warren, and Pete Buttigieg). The contrast showed the four other contenders had lower or neutral favorability that was higher than Donald Trump's net favorability. Donald Trump had consistently lower favorability throughout 2019, mainly unfavorability by the general public since his presidency.
+
+## Critique of 538 Graph
+
+The graph is good as it tells us all the information and the trend in Trump's favorability among the general voter. It also shows the favorability among Democratic candidates in a positive light showing that Trump did have some competition with the opposing party. I think the graph communicates this idea well. I would criticize the data collection for only one year. I'd want to see trends throughout the four years of Trump's presidency. Another critique is the favorability poll itself, as there were many biases depending on the location of the poll. I'd expect some favorability to be in more locations than others since it was a poll. So I'm curious if the results would be the same for the entire US population. A final improvement I'd like to add to the graph is fixing the x-axis to be consistent with the abbreviation of the months. While I like the design of the axis, titles, color for different political parties, a distracting feature is some months being fully spelled out and some not. I would like to make the months abbreviated for all the graphs rather than half spelled out and half abbreviated.
+
+```{r}
+#| message: false
+library(tidyverse)
+library(fivethirtyeight)
+library(ggthemes)
+library(lubridate)
+library(patchwork)
+library(grid)
+library(gridExtra)
+library(cowplot)
+
+favorability <- read_csv(here::here("posts",
+                                    "STAT365Project",
+                                    "favorability_polls_rv_2019.csv"))
+```
+
+```{r}
+# Create only data with only politicans in graph
+favorability <- favorability |>
+    mutate(netfavor = (favorable - unfavorable))
+```
+
+```{r}
+DT <- ggplot(data = subset(favorability, politician == "Donald Trump")) +
+  geom_abline(intercept = 0, 
+              slope = 0,
+              color = "black") +
+  geom_point(mapping = aes(x = start_date, 
+                           y = netfavor), 
+             color = "#fc2b1c",
+             size = 3) +
+  theme_fivethirtyeight() +
+  scale_y_continuous(limits = c(-25, 25),
+                     labels = c(-20, -10, 0, "+10", "+20"),
+                     breaks = seq(-20, 20, 10)
+                     ) +
+  scale_x_date(limits = c(ymd("2019-01-03"),
+                          ymd("2019-12-07")
+                          ),
+               breaks = c(ymd("2019-01-03"),
+                          ymd("2019-04-01"),
+                          ymd("2019-07-01"),
+                          ymd("2019-10-01"),
+                          ymd("2019-12-07")),
+               label = c("Jan.", 
+                         "April", 
+                         "July", 
+                         "Oct.",
+                         "`19")
+  ) +
+  annotate("text", x = ymd("2019-07-01"), 
+           y = 20, 
+           label= "Trump",
+           size = 7,
+           fontface = "bold",
+           ) +
+  ylab("Net Favorability") +
+  ggtitle("Trump is less popular than leading Democractic candidates",
+          subtitle = "Net favorability of President Trump and 2020 Democractic front-runners \namong registerd voters, from Jan.1 to Dec. 10, 2019") +
+  theme(axis.title.y = element_text(face="bold", size=10),
+        plot.title = element_text(face="bold", size=12),
+        plot.subtitle = element_text(size=8),
+        aspect.ratio=1)
+```
+
+```{r}
+JB <- ggplot(data = subset(favorability, politician == "Joseph R. Biden Jr.")) +
+  geom_abline(intercept = 0, 
+              slope = 0,
+              color = "black") +
+  geom_point(mapping = aes(x = start_date, 
+                           y = netfavor), 
+             color = "#1790d2",
+             size = 3) +
+  theme_fivethirtyeight() +
+  scale_y_continuous(limits = c(-25, 25),
+                     labels = c(-20, -10, 0, "+10", "+20"),
+                     breaks = seq(-20, 20, 10),
+                     name = "Net Favorability"
+                     ) +
+  scale_x_date(limits = c(ymd("2019-01-03"),
+                          ymd("2019-12-07")
+                          ),
+               breaks = c(ymd("2019-01-03"),
+                          ymd("2019-04-01"),
+                          ymd("2019-07-01"),
+                          ymd("2019-10-01"),
+                          ymd("2019-12-07")),
+               label = c("Jan.", 
+                         "April", 
+                         "July", 
+                         "Oct.",
+                         "`19")
+  ) +
+  annotate("text", x = ymd("2019-07-01"), 
+           y = 20, 
+           label= "Biden",
+           size = 7,
+           fontface = "bold",
+           ) +
+  ylab("Net Favorability") +
+  theme(axis.title.y = element_text(face="bold", size=10),
+        aspect.ratio=1)
+```
+
+```{r}
+BS <- ggplot(data = subset(favorability, politician == "Bernard Sanders")) +
+  geom_abline(intercept = 0, 
+              slope = 0,
+              color = "black") +
+  geom_point(mapping = aes(x = start_date, 
+                           y = netfavor), 
+             color = "#1790d2",
+             size = 3) +
+  theme_fivethirtyeight() +
+  scale_y_continuous(limits = c(-25, 25),
+                     labels = c(-20, -10, 0, "+10", "+20"),
+                     breaks = seq(-20, 20, 10)
+                     ) +
+  scale_x_date(limits = c(ymd("2019-01-03"),
+                          ymd("2019-12-07")
+                          ),
+               breaks = c(ymd("2019-01-03"),
+                          ymd("2019-04-01"),
+                          ymd("2019-07-01"),
+                          ymd("2019-10-01"),
+                          ymd("2019-12-07")),
+               label = c("Jan.", 
+                         "April", 
+                         "July", 
+                         "Oct.",
+                         "`19")
+  ) +
+  annotate("text", x = ymd("2019-07-01"), 
+           y = 20, 
+           label= "Sanders",
+           size = 7,
+           fontface = "bold",
+           ) +
+  theme(aspect.ratio=1)
+```
+
+```{r}
+EW <- ggplot(data = subset(favorability, politician == "Elizabeth Warren")) +
+  geom_abline(intercept = 0, 
+              slope = 0,
+              color = "black") +
+  geom_point(mapping = aes(x = start_date, 
+                           y = netfavor), 
+             color = "#1790d2",
+             size = 3) +
+  theme_fivethirtyeight() +
+  scale_y_continuous(limits = c(-25, 25),
+                     labels = c(-20, -10, 0, "+10", "+20"),
+                     breaks = seq(-20, 20, 10)
+                     ) +
+  scale_x_date(limits = c(ymd("2019-01-03"),
+                          ymd("2019-12-07")
+                          ),
+               breaks = c(ymd("2019-01-03"),
+                          ymd("2019-04-01"),
+                          ymd("2019-07-01"),
+                          ymd("2019-10-01"),
+                          ymd("2019-12-07")),
+               label = c("Jan.", 
+                         "April", 
+                         "July", 
+                         "Oct.",
+                         "`19")
+  ) +
+  annotate("text", x = ymd("2019-07-01"), 
+           y = 20, 
+           label= "Warren",
+           size = 7,
+           fontface = "bold",
+           ) +
+  ylab("Net Favorability") +
+  theme(axis.title.y = element_text(face="bold", size=10),
+        aspect.ratio=1)
+```
+
+```{r}
+PB <- ggplot(data = subset(favorability, politician == "Pete Buttigieg")) +
+  geom_abline(intercept = 0, 
+              slope = 0,
+              color = "black") +
+  geom_point(mapping = aes(x = start_date, 
+                           y = netfavor), 
+             color = "#1790d2",
+             size = 3) +
+  theme_fivethirtyeight() +
+  scale_y_continuous(limits = c(-25, 25),
+                     labels = c(-20, -10, 0, "+10", "+20"),
+                     breaks = seq(-20, 20, 10)
+                     ) +
+  scale_x_date(limits = c(ymd("2019-01-03"),
+                          ymd("2019-12-07")
+                          ),
+               breaks = c(ymd("2019-01-03"),
+                          ymd("2019-04-01"),
+                          ymd("2019-07-01"),
+                          ymd("2019-10-01"),
+                          ymd("2019-12-07")),
+               label = c("Jan.", 
+                         "April", 
+                         "July", 
+                         "Oct.",
+                         "`19")
+  ) +
+  annotate("text", x = ymd("2019-07-01"), 
+           y = 20, 
+           label= "Buttigieg",
+           size = 7,
+           fontface = "bold",
+           ) +
+  theme(aspect.ratio=1)
+```
+
+```{r}
+DT
+x1 <- grid.arrange(JB, BS, ncol = 2)
+x2 <- grid.arrange(EW, PB, ncol = 2)
+
+grid.arrange(DT, x1, x2, nrow = 3)
+
+DT / (JB | BS) / (EW | PB)
+```

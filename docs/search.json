@@ -4,13 +4,48 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About Me!\nI’m all about those projects! But most importantly I care about the quality of those projects.\nComing into college I did not know what I was coming in to. I switched into Statistics in the beginning of my second year from another major called Industrial Technology and Packaging (ITP).\nI was born in Pasadena CA,"
+    "text": "Current College: California Polytechnic State University, San Luis Obispo, California\nExpected Graduate Date: June 2025\n\nI’m all about those projects! But most importantly I care about the quality of those projects.\nComing into college I did not know what I was coming in to. I switched into Statistics in the beginning of my second year from another major called Industrial Technology and Packaging (ITP).\nI was born in Pasadena CA, in 2003. I’m currently 20 looking to enjoy my life at Cal Poly. Even when I switched out of ITP to Statistics, I’ve kept in touch with a lot of my friends from my previous majors and I love volunteering for all the clubs I’m involved with!\nI hope to become more involved with the Cal Poly Stats club and all my culture clubs I am involved with. Currently I am in a lot of involvements such as Cal Poly Stats Club, Chinese Student Association (CSA), Korean American Student Association (KASA), Pilipino Cultural Exchange (PCE), Nikkei Student Union (NSU), EPIC, Asian American Christian Fellowship (AACF), and possibly more!\nI hope to expand this website by beginning with my most recent projects to my least relevant projects from top to bottom on the projects tab. Hopefully it isn’t too long for anyone to read."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Adam Kong",
     "section": "",
-    "text": "Hello! My Name’s Adam Kong. I am a second year Statistics major at California Polytechnic State University located in San Luis Obispo. I am currently working on graduating with a Statistics degree in 2025 with an Actuary Prep Minor.\n\n\n\nTemple City High School, California | Temple City, CA\nHigh School Diploma | August 2017 - June 2021\n\nCalifornia Polytechnic State University, California | San Luis Obispo, CA\nB. S. in Statistics | Actuary Prep Minor | August 2021 - June 2025\n\n\n\n\nSports\n\nTennis\nBadminton\nBaseball\nBasketball\nSwimming\n\nHobbies\n\nComputers\nGaming\nArt\nReading\nSleeping\n\n\n\n \n  \n   \n  \n     LinkedIn\n  \n  \n     GitHub\n  \n  \n     Email"
+    "text": "Hello! My Name’s Adam Kong. I am a second year Statistics major at California Polytechnic State University located in San Luis Obispo. I am currently working on graduating with a Statistics degree in 2025 with an Actuary Prep Minor.\n\n\n\nTemple City High School, California | Temple City, CA\nHigh School Diploma | August 2017 - June 2021\n\nCalifornia Polytechnic State University, California | San Luis Obispo, CA\nB. S. in Statistics | Actuary Prep Minor | August 2021 - June 2025\n\n\n\n\nSports\n\nTennis\nBadminton\nBaseball\nBasketball\nSwimming\n\nHobbies\n\nComputers\nGaming\nArt\nReading\n\n\n\n \n  \n   \n  \n     LinkedIn\n  \n  \n     GitHub\n  \n  \n     Email"
+  },
+  {
+    "objectID": "posts/STAT331Project/index.html",
+    "href": "posts/STAT331Project/index.html",
+    "title": "Example Project",
+    "section": "",
+    "text": "Example Project. Not Yet :)\nEnjoy the random Minecraft profile picture."
+  },
+  {
+    "objectID": "posts/STAT365Project/index.html",
+    "href": "posts/STAT365Project/index.html",
+    "title": "STAT 365: Copy the Masters",
+    "section": "",
+    "text": "A report copying a graph on fivethirtyeight. My submission used a graph comparing the net favorability rate of Donald Trump to other Democratic candidates listed below. I have attached below what the graph should look like and a copy of the report. Although the graphs did not turn out correctly, I believe I understood the basic modifications and ideas from the project. This project was done completely in RStudio.\n\nhttps://fivethirtyeight.com/features/the-democratic-presidential-candidates-are-becoming-less-popular/\n\n\"The Democratic Presidential Candidates Are Becoming Less Popular\""
+  },
+  {
+    "objectID": "posts/STAT365Project/index.html#graph-description",
+    "href": "posts/STAT365Project/index.html#graph-description",
+    "title": "STAT 365: Copy the Masters",
+    "section": "Graph Description",
+    "text": "Graph Description\nThe graph shows the net favorability of the five candidates running in the United States 2020 elections. The graph calculated the net favorability of one Republican candidate (Donald Trump) and four Democratic candidates (Joe Biden, Bernie Sanders, Elizabeth Warren, and Pete Buttigieg). The contrast showed the four other contenders had lower or neutral favorability that was higher than Donald Trump’s net favorability. Donald Trump had consistently lower favorability throughout 2019, mainly unfavorability by the general public since his presidency."
+  },
+  {
+    "objectID": "posts/STAT365Project/index.html#critique-of-538-graph",
+    "href": "posts/STAT365Project/index.html#critique-of-538-graph",
+    "title": "STAT 365: Copy the Masters",
+    "section": "Critique of 538 Graph",
+    "text": "Critique of 538 Graph\nThe graph is good as it tells us all the information and the trend in Trump’s favorability among the general voter. It also shows the favorability among Democratic candidates in a positive light showing that Trump did have some competition with the opposing party. I think the graph communicates this idea well. I would criticize the data collection for only one year. I’d want to see trends throughout the four years of Trump’s presidency. Another critique is the favorability poll itself, as there were many biases depending on the location of the poll. I’d expect some favorability to be in more locations than others since it was a poll. So I’m curious if the results would be the same for the entire US population. A final improvement I’d like to add to the graph is fixing the x-axis to be consistent with the abbreviation of the months. While I like the design of the axis, titles, color for different political parties, a distracting feature is some months being fully spelled out and some not. I would like to make the months abbreviated for all the graphs rather than half spelled out and half abbreviated."
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "STAT 365: Copy the Masters\n\n\n\n\n\n\n\nProjects\n\n\n\n\n\n\n\n\n\n\n\nMay 25, 2023\n\n\nAdam Kong\n\n\n\n\n\n\n  \n\n\n\n\nExample Project\n\n\n\n\n\n\n\nProjects\n\n\n\n\n\n\n\n\n\n\n\nJan 5, 2023\n\n\nAdam Kong\n\n\n\n\n\n\nNo matching items"
   }
 ]
