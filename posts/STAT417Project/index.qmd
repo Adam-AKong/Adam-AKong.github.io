@@ -1,0 +1,13 @@
+---
+title: "Cirrhosis Survival"
+author: "Adam Kong"
+date: "2024-03-19"
+categories: [Project]
+image: stat417.png
+---
+
+# **Evaluating the Impact of D-Penicillamine on Cirrhosis Survival**
+
+A recent study examined whether D-penicillamine could improve survival in individuals diagnosed with primary biliary cirrhosis. The dataset included 418 participants, but 112 were excluded due to missing health data. Researchers analyzed survival time, measured as days from enrollment until death, with right-censoring applied to those who either lived beyond the study or received a liver transplant. Key factors influencing survival included age, sex, bilirubin, hepatomegaly, copper, albumin, and SGOT levels. However, the drug itself showed no significant effect on mortality risk. These findings suggest that a patient’s overall health at enrollment is a stronger predictor of survival than the treatment, indicating that D-penicillamine is not an effective intervention for cirrhosis.
+
+<embed src="STAT417_PROJECT.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

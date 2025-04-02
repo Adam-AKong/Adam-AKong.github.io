@@ -1,0 +1,9 @@
+---
+title: "Sushi DMAIC Process Improvement"
+author: "Adam Kong"
+date: "2024-12-01"
+categories: [Project]
+image: sushi.png
+---
+
+<embed src="Sushi_DMAIC.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

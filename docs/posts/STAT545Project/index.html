@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Adam Kong">
+<meta name="dcterms.date" content="2023-01-05">
+
+<title>Multiplayer Server Queue Simulation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.html">
+ <span class="menu-text">Resume</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Multiplayer Server Queue Simulation</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Projects</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Adam Kong </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 5, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="multiplayer-videogame-server-queue-simulation" class="level1">
+<h1>Multiplayer Videogame Server Queue Simulation</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(markovchain) <span class="co"># for plotting state diagram</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(expm)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridisLite)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(prismatic) <span class="co"># for auto-contrast colors (black/numbers number in transition matrix heat map)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colourvalues) <span class="co"># for using with viridis</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>In this project I aim to research more on the Jackson Network (Jacksonian Network) found in queuing theory. First I will discuss the theory and ideas behind Jackson Networks. Then I will use this in an actual application, where I will using a League of Legends as my example. League of Legends is a Multiplayer Online Battle Arena game (MOBA), where involves a total of 10 players for a match to begin, where each team has 5 players and both teams must work cooperatively to defeat the other team and take control of their side of the map. In this scenario I will be simulating individual players and the amount of time they spend in game, starting from the moment a player “queues” for a match from different regions in the world, where players will queue to choose one of seven different warrior classes, which vary in popularity in different regions. From there players can connect to three different servers, where some regions can connect to the region, but some regions cannot connect to others. This is meant to be a challenging premise, where there will be three sections of multiple queues. I plan to simulate multiple nodes. It will be an expanded version of the pictures below, found on Wikipedia from the Jackson Network page. I will be assuming this is an open Jackson Network, where there will be exogeneous inputs and will also depart at exogenous times as well. I want the queues to run at the same times, where times will be indepedent of other nodes / queues. The diagram on the LibreText also show a returning queue, but for my scenario I want to simplify one direction.</p>
+<p><u><strong>Sources</strong></u></p>
+<section id="jackson-networks" class="level4">
+<h4 class="anchored" data-anchor-id="jackson-networks">6.7: Jackson Networks</h4>
+<p><a href="https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Signal_Processing_and_Modeling/Discrete_Stochastic_Processes_(Gallager)/06%3A_Markov_processes_with_countable_state_spaces/6.7%3A_Jackson_Networks" class="uri">https://eng.libretexts.org/Bookshelves/Electrical_Engineering/Signal_Processing_and_Modeling/Discrete_Stochastic_Processes_(Gallager)/06%3A_Markov_processes_with_countable_state_spaces/6.7%3A_Jackson_Networks</a></p>
+<p><strong>Wikipedia - Jackson Networks</strong></p>
+<p><a href="https://en.wikipedia.org/wiki/Jackson_network" class="uri">https://en.wikipedia.org/wiki/Jackson_network</a></p>
+<p><img src="images/clipboard-1760366554.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="what-is-jackson-networks" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-jackson-networks">What is Jackson Networks</h2>
+<p>To put it simply, a Jackson Network is a queuing system where customers process through different queues before leaving the system. Each queue is considered a node with an arrival rate and a service rate. In most cases outside nodes that are not interconnected in this network are considered exogenous arrivals (external arrivals). In a theoretical Jackson Network, customers enter one queue and decide if they want to leave or go to another queue and so on. Each queue follows a poisson arrival (<span class="math inline">\(\lambda\)</span>) and are serviced with an exponential rate (<span class="math inline">\(\mu\)</span>). A customers choice to do anything they want at any node are IID and independent of all service times, inputs, and other customer routing. Routing is assumed instantaneous. The network is a Markov process, where customers are in a state and state changes occur when exogenous arrivals and departures happen.</p>
+<p>The balance equation of exogeneous arrival rates and services times and routing probabilities have to be consistent given by:</p>
+<p><span class="math display">\[
+\lambda_i Q_{ij} = \lambda_j Q^*_{ji}
+\]</span></p>
+<p>The balance equation for a Jackson Network, considering all possible state transitions, is:</p>
+<p><span class="math display">\[
+\sum_{m'} q^*_{m, m'} = \sum_{j=1}^{k} \lambda_0 Q^*_{0j} + \sum_{i: m_j &gt; 0} \mu_i Q^*_{i0} + \sum_{i: m_j &gt; 0} \mu_i \sum_{j=1}^{k} Q^*_{ij}
+\]</span></p>
+<p>Which is the sum of all possible transition from state m to another state m. Similar to something that I will create later. In other words, we can start by looking at steady-state distribution of the Jackson Network.</p>
+<p>The same full balance equation is:</p>
+<p><span class="math display">\[
+\sum_{m'} q^*_{m, m'} = \lambda_0 + \sum_{i : m_i &gt; 0} \mu_i
+\]</span></p>
+<section id="idea-about-simulation-and-example" class="level3">
+<h3 class="anchored" data-anchor-id="idea-about-simulation-and-example">Idea about Simulation and Example</h3>
+<p><img src="images/diagram.png" class="img-fluid"></p>
+</section>
+<section id="parameters" class="level3">
+<h3 class="anchored" data-anchor-id="parameters">Parameters</h3>
+<p>The queues will mostly follow an exponential distribution, where rates will be in minutes. The entire process should take nearly hours to finish a game. However, this simulation may not represent that these games do take long hours to finish. However, the main purpose of this project is to explore the ideas of Jackson Networks, even if this specific function may not work. According to</p>
+</section>
+<section id="region-queues" class="level3">
+<h3 class="anchored" data-anchor-id="region-queues">Region Queues</h3>
+<p>First establish the region queues. I have six main regions with North America, South America, Europe, China, Korea, and Australia. Some of the main regions in this supped game, I will say each region will have their own expected probabilities for each of the character class. For example, I will say North America have a higher chance of choosing a Marksman over another region like South America.</p>
+</section>
+<section id="classes" class="level3">
+<h3 class="anchored" data-anchor-id="classes">Classes</h3>
+<p>There will be seven classes the queues will lead to. Like I stated earlier choosing one region will increase the probability of going to one queue to another. The seven classes are listed as follow. Bruiser, Fighter, Mage, Marksman, Slayer,Tank, Specialist. Each will be their own queue and have different rates to go on to the next server. Finally I plan to have three queues for the game, these games will plan to take an hour each. so really it should have a lambda of 1/60 for all queues. I simplified this problem to three queues to simulate the sample of players I am looking it. Imagine we are simulating if players join games in the same servers, and they come together from different regions and different classes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lambda_values_s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"NA"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"SA"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"KR"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"CH"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"EU"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"AU"</span> <span class="ot">=</span> <span class="fl">0.5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mu_values_s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"NA"</span> <span class="ot">=</span> <span class="fl">0.6</span>, <span class="st">"SA"</span> <span class="ot">=</span> <span class="fl">0.75</span>, <span class="st">"KR"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"CH"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"EU"</span> <span class="ot">=</span> <span class="fl">0.6</span>, <span class="st">"AU"</span> <span class="ot">=</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mu_values_c <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bruiser"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Fighter"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Mage"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Marksman"</span> <span class="ot">=</span> <span class="fl">0.5</span>, <span class="st">"Slayer"</span> <span class="ot">=</span> <span class="fl">0.2</span>, <span class="st">"Tank"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Specialist"</span> <span class="ot">=</span> <span class="fl">0.1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>mu_values_g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Game 1"</span> <span class="ot">=</span> <span class="dv">60</span>, <span class="st">"Game 2"</span> <span class="ot">=</span> <span class="dv">120</span>, <span class="st">"Game 3"</span> <span class="ot">=</span> <span class="dv">30</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>sd_values_g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Game 1"</span> <span class="ot">=</span> <span class="dv">10</span>, <span class="st">"Game 2"</span> <span class="ot">=</span> <span class="dv">20</span>, <span class="st">"Game 3"</span> <span class="ot">=</span> <span class="dv">5</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>server_indices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"NA"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"SA"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"KR"</span> <span class="ot">=</span> <span class="dv">3</span>, <span class="st">"CH"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"EU"</span> <span class="ot">=</span> <span class="dv">5</span>, <span class="st">"AU"</span> <span class="ot">=</span> <span class="dv">6</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>class_indices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bruiser"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Fighter"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Mage"</span> <span class="ot">=</span> <span class="dv">3</span>, <span class="st">"Marksman"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"Slayer"</span> <span class="ot">=</span> <span class="dv">5</span>, <span class="st">"Tank"</span> <span class="ot">=</span> <span class="dv">6</span>, <span class="st">"Specialist"</span> <span class="ot">=</span> <span class="dv">7</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>game_indices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Game 1"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Game 2"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Game 3"</span> <span class="ot">=</span> <span class="dv">3</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>region_to_class_probs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.1</span>,  <span class="co"># NA</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>,  <span class="co"># SA</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,  <span class="co"># KR</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>,  <span class="co"># CH</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="fl">0.1</span>,  <span class="co"># EU</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.15</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>), <span class="co"># AU</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">6</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"SA"</span>, <span class="st">"KR"</span>, <span class="st">"CH"</span>, <span class="st">"EU"</span>, <span class="st">"AU"</span>), <span class="fu">c</span>(<span class="st">"Bruiser"</span>, <span class="st">"Fighter"</span>, <span class="st">"Mage"</span>, <span class="st">"Marksman"</span>, <span class="st">"Slayer"</span>, <span class="st">"Tank"</span>, <span class="st">"Specialist"</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>class_to_game_probs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.0</span>, <span class="fl">0.3</span>, <span class="fl">0.7</span>, <span class="co"># Bruiser</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="co"># Fighter </span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="co"># Mage</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.0</span>, <span class="fl">0.6</span>, <span class="fl">0.4</span>, <span class="co"># Marksman</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="co"># Slayer</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.5</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="co"># Tank</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="fl">0.0</span>), <span class="co"># Specialist</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">7</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"Bruiser"</span>, <span class="st">"Fighter"</span>, <span class="st">"Mage"</span>, <span class="st">"Marksman"</span>, <span class="st">"Slayer"</span>, <span class="st">"Tank"</span>, <span class="st">"Specialist"</span>), <span class="fu">c</span>(<span class="st">"Game 1"</span>, <span class="st">"Game 2"</span>, <span class="st">"Game 3"</span>))</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>player_lim <span class="ot">=</span> <span class="dv">5</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>n_jumps <span class="ot">=</span> <span class="dv">100000</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>region_t <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n_jumps <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">6</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>class_t <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n_jumps <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">7</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>game_t <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n_jumps <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>W_n <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> n_jumps <span class="sc">+</span> <span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>W_n[<span class="dv">1</span>, ] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>n_jumps){</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  server <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"SA"</span>, <span class="st">"KR"</span>, <span class="st">"CH"</span>, <span class="st">"EU"</span>, <span class="st">"AU"</span>), <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.05</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.05</span>))</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  lambda <span class="ot">&lt;-</span> lambda_values_s[server]</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> mu_values_s[server]</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  rate <span class="ot">=</span> lambda <span class="sc">+</span> <span class="fu">sum</span>(mu<span class="sc">*</span><span class="fu">pmin</span>(player_lim, region_t[n <span class="sc">-</span> <span class="dv">1</span>, server_indices[server]]))</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  service_rate <span class="ot">=</span> <span class="fu">sum</span>(mu<span class="sc">*</span><span class="fu">pmin</span>(player_lim, region_t[n <span class="sc">-</span> <span class="dv">1</span>, server_indices[server]]))</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  p_arrive <span class="ot">=</span> lambda <span class="sc">/</span> rate</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>  p_service <span class="ot">=</span> service_rate <span class="sc">/</span> rate</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  decision <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"arrival"</span>, <span class="st">"service"</span>), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">c</span>(p_arrive, p_service))</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  region_t[n, ] <span class="ot">&lt;-</span> region_t[n <span class="sc">-</span> <span class="dv">1</span>, ]</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  class_t[n, ] <span class="ot">&lt;-</span> class_t[n <span class="sc">-</span> <span class="dv">1</span>, ]</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  game_t[n, ] <span class="ot">&lt;-</span> game_t[n <span class="sc">-</span> <span class="dv">1</span>, ]</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  departing_player <span class="ot">&lt;-</span> <span class="cn">FALSE</span>  <span class="co"># Track if someone leaves for next queue</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>  curr_ind <span class="ot">&lt;-</span> server_indices[server]</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  region_t[n, ] <span class="ot">=</span> region_t[n <span class="sc">-</span> <span class="dv">1</span>, ]</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  W_n[n, <span class="dv">1</span>] <span class="ot">=</span> W_n[n <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">1</span>] <span class="sc">+</span> <span class="fu">rexp</span>(<span class="dv">1</span>) <span class="sc">/</span> (lambda_values_s[server] <span class="sc">+</span> mu_values_s[server] <span class="sc">*</span> <span class="fu">min</span>(player_lim, region_t[n <span class="sc">-</span> <span class="dv">1</span>, curr_ind]))</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (decision <span class="sc">==</span> <span class="st">"arrival"</span>) {</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    region_t[n, curr_ind] <span class="ot">=</span> region_t[n <span class="sc">-</span> <span class="dv">1</span>, curr_ind] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>    region_t[n, curr_ind] <span class="ot">&lt;-</span> region_t[n <span class="sc">-</span> <span class="dv">1</span>, curr_ind] <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>    departing_player <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (departing_player) {</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>    class_selected <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">names</span>(class_indices), </span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">1</span>, </span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>                             <span class="at">prob =</span> region_to_class_probs[server, ])</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>    class_ind <span class="ot">&lt;-</span> class_indices[class_selected]</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>    class_t[n, class_ind] <span class="ot">&lt;-</span> class_t[n <span class="sc">-</span> <span class="dv">1</span>, class_ind] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">sum</span>(class_t[n <span class="sc">-</span> <span class="dv">1</span>, ] <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&gt;</span> <span class="dv">0</span>)  {</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>    active_classes <span class="ot">&lt;-</span> <span class="fu">names</span>(class_indices)[class_t[n <span class="sc">-</span> <span class="dv">1</span>, ] <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>    selected_class <span class="ot">&lt;-</span> <span class="fu">sample</span>(active_classes, <span class="dv">1</span>)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>    class_ind <span class="ot">&lt;-</span> class_indices[selected_class]</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>    W_n[n, <span class="dv">2</span>] <span class="ot">=</span> W_n[n <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">2</span>] <span class="sc">+</span> <span class="fu">rexp</span>(<span class="dv">1</span>) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> mu_values_c[class_ind] <span class="sc">*</span> <span class="fu">min</span>(player_lim, class_t[n <span class="sc">-</span> <span class="dv">1</span>, class_ind]))</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lambda will be 1 once we immediately place it into the queue.</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>    mu_class <span class="ot">&lt;-</span> <span class="fu">sum</span>(mu<span class="sc">*</span><span class="fu">pmin</span>(player_lim, class_t[n <span class="sc">-</span> <span class="dv">1</span>, class_indices[class_ind]]))</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    service_prob <span class="ot">&lt;-</span> mu_class <span class="sc">/</span> (mu_class <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> service_prob) {</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>      class_t[n, class_ind] <span class="ot">&lt;-</span> class_t[n <span class="sc">-</span> <span class="dv">1</span>, class_ind] <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>      game_selected <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">names</span>(game_indices), </span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">1</span>, </span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>                             <span class="at">prob =</span> class_to_game_probs[class_ind, ])</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>      game_ind <span class="ot">&lt;-</span> game_indices[game_selected]</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>      game_t[n, game_ind] <span class="ot">&lt;-</span> class_t[n <span class="sc">-</span> <span class="dv">1</span>, game_ind] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>      } </span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>      W_n[n, <span class="dv">2</span>] <span class="ot">=</span> W_n[n <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">2</span>]</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">sum</span>(game_t[n <span class="sc">-</span> <span class="dv">1</span>, ] <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    active_games <span class="ot">&lt;-</span> <span class="fu">names</span>(game_indices)[game_t[n <span class="sc">-</span> <span class="dv">1</span>, ] <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>    selected_game <span class="ot">&lt;-</span> <span class="fu">sample</span>(active_games, <span class="dv">1</span>)</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>    game_ind <span class="ot">&lt;-</span> game_indices[selected_game]</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>    W_n[n, <span class="dv">3</span>] <span class="ot">&lt;-</span> W_n[n <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">3</span>] <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, </span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">mean =</span> mu_values_g[selected_game], </span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sd =</span> sd_values_g[selected_game]) <span class="sc">/</span> </span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>  (<span class="dv">1</span> <span class="sc">+</span> mu_values_g[selected_game] <span class="sc">*</span> <span class="fu">min</span>(player_lim, game_t[n <span class="sc">-</span> <span class="dv">1</span>, game_ind]))</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    mu_game <span class="ot">&lt;-</span> mu_values_g[selected_game]</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>    service_prob <span class="ot">&lt;-</span> mu_game <span class="sc">/</span> (mu_game <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> service_prob) {</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>      game_t[n, game_ind] <span class="ot">&lt;-</span> game_t[n <span class="sc">-</span> <span class="dv">1</span>, game_ind] <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>    W_n[n, <span class="dv">3</span>] <span class="ot">&lt;-</span> W_n[n <span class="sc">-</span> <span class="dv">1</span>, <span class="dv">3</span>]</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>region_t <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(region_t)</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>class_t <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(class_t)</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>game_t <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(game_t)</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>W_n <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(W_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="code-bresakdown" class="level3">
+<h3 class="anchored" data-anchor-id="code-bresakdown">Code Bresakdown</h3>
+<p>Similar to how the Costco Time Application functions, I wanted this project and function to work in a similar manner. The struggle is connecting three individual queues and gathering times for those to work. Considerably, one of the biggest concerns I had was the number of short exponential times that I need to combine. While this function might not be necessarily correct in how it functions and it could be written more correct, I wanted to focus more on the ideas of Jacksonian Networks. First this paragraph will describe what is different from this code to the Costco application.</p>
+<p>The first major change is that all queues have their own lambda and mu’s. Which are not exclusive to just one rate. This will be more apparent when I produce graphs of how many players are in each queue. For this specifically simulation, I’m exaggerating how Asian countries like China and South Korea have more players. This is more true in the real world of League of Legends, where a majority of players are from these specific countries, but they have many more servers and countries than this simplified version.</p>
+<p>The second major change in this project is that I have created a transition matrix between queues. I was surprised on how this works, but it made sense to figure out where the next transition in what state would lead to another. For the regions to class transition matrix, I wanted all regions to have a transition to another queue, so no cell is set to 0. However, for the class to game indices I figured some class types could be potentially “banned” from the simplified three games I had running at the time.</p>
+<section id="additional-notes" class="level4">
+<h4 class="anchored" data-anchor-id="additional-notes">Additional Notes</h4>
+<p>I did try and implement a tracking for each individual players, however this code wouldn’t work. For a future project if I look back at this I would try and implement this so I can have individual. So for now, in the scope of this project. I want to focus on distribution of the number of players in each queue. I also do not know if my implementation of a normal distribution for the time works. I lose the memoryless property by changing this to a normal distribution. However, I think the times for these ones are reasonable. Some times the implementation to the second queue can add two to the next queue, however I am very happy with the results. My times for each one may be incorrect and from the LibreTexts, the service times at all other nodes are independent of exogenous arrival times at all nodes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>region_c_total <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">colMeans</span>(region_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(region_c_total)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"count"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>region_c_total<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Korea"</span>, <span class="st">"China"</span>, <span class="st">"Europe"</span>, <span class="st">"Australia"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>class_c_total <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">colMeans</span>(class_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(class_c_total)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"count"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>class_c_total<span class="sc">$</span>Class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bruiser"</span>, <span class="st">"Fighter"</span>, <span class="st">"Mage"</span>, <span class="st">"Marksman"</span>, <span class="st">"Slayer"</span>, <span class="st">"Tank"</span>, <span class="st">"Specialist"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>game_c_total <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">colMeans</span>(game_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(game_c_total)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"count"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>game_c_total<span class="sc">$</span>Game <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Game 1"</span>, <span class="st">"Game 2"</span>, <span class="st">"Game 3"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>region_r_total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(region_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>class_r_total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(class_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>game_r_total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(game_t, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>total_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> W_n,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">region_total =</span> region_r_total,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">class_total =</span> class_r_total,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">game_total =</span> game_r_total</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(region_c_total, <span class="fu">aes</span>(<span class="at">x =</span> Region, <span class="at">y =</span> count, <span class="at">fill =</span> Region)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Players in Each Region Queue"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Region"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Players in Queue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>region_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t.1 =</span> total_df<span class="sc">$</span>t<span class="fl">.1</span>, <span class="at">region_total =</span> total_df<span class="sc">$</span>region_total)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(region_df, <span class="fu">aes</span>(<span class="at">x =</span> t<span class="fl">.1</span>, <span class="at">y =</span> region_total)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Region Queue Total"</span>, <span class="at">title =</span> <span class="st">"Region Queue Total Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>region_t_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(region_t)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>region_t_df<span class="sc">$</span>total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(region_t_df, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>region_t_df<span class="sc">$</span>t <span class="ot">&lt;-</span> W_n[,<span class="dv">1</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>col_plot <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"V"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(region_t))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>d_long_1 <span class="ot">&lt;-</span> <span class="fu">melt</span>(region_t_df[, <span class="fu">c</span>(<span class="st">"t"</span>, col_plot)], <span class="at">id.vars =</span> <span class="st">"t"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>d_long_1<span class="sc">$</span>variable <span class="ot">&lt;-</span> <span class="fu">factor</span>(d_long_1<span class="sc">$</span>variable, <span class="at">levels =</span> col_plot, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Korea"</span>, <span class="st">"China"</span>, <span class="st">"Europe"</span>, <span class="st">"Australia"</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>d_long_1 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(d_long_1)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_long_1, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> value, <span class="at">col =</span> variable)) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Region Total"</span>, <span class="at">color =</span> <span class="st">"Region"</span>, <span class="at">title =</span> <span class="st">"Sample Path of Regions Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="region" class="level3">
+<h3 class="anchored" data-anchor-id="region">Region</h3>
+<p>Here in Region, Korea and China will have the largest queues, but also one of the fastest processing queues. In the total queue, it never goes near a point near 0 players in the queue, but it does stabilize around 30 players in the queue on average. By these numbers, thousands of players will have gone through the queue in a near 10 hour span. From the sample paths over the regions, China and Korea once again have one of the most volatile queues, spiking near 30 in the queue by itself, while the other queues stay relatively low. I wanted the other countries to not have as many, because in the real game, the queues from other servers are not as long as those servers. You also need Chinese or Korean I.D. to access these servers, so it’s a surprise how large these queues can actually become.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(class_c_total, <span class="fu">aes</span>(<span class="at">x =</span> Class, <span class="at">y =</span> count, <span class="at">fill =</span> Class)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Players in Each Class Queue"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Class"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Players in Queue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>class_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t.2 =</span> total_df<span class="sc">$</span>t<span class="fl">.2</span>, <span class="at">class_total =</span> total_df<span class="sc">$</span>class_total)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(class_df, <span class="fu">aes</span>(<span class="at">x =</span> t<span class="fl">.2</span>, <span class="at">y =</span> class_total)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Class Queue Total"</span>, <span class="at">title =</span> <span class="st">"Class Queue Total Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>class_t_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(class_t)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>class_t_df<span class="sc">$</span>total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(class_t_df, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>class_t_df<span class="sc">$</span>t <span class="ot">&lt;-</span> W_n[,<span class="dv">2</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>col_plot_class <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"V"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(class_t))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>d_long_class <span class="ot">&lt;-</span> <span class="fu">melt</span>(class_t_df[, <span class="fu">c</span>(<span class="st">"t"</span>, col_plot_class)], <span class="at">id.vars =</span> <span class="st">"t"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>d_long_class<span class="sc">$</span>variable <span class="ot">&lt;-</span> <span class="fu">factor</span>(d_long_class<span class="sc">$</span>variable, <span class="at">levels =</span> col_plot_class, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Bruiser"</span>, <span class="st">"Fighter"</span>, <span class="st">"Mage"</span>, <span class="st">"Marksman"</span>, <span class="st">"Slayer"</span>, <span class="st">"Tank"</span>, <span class="st">"Specialist"</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>d_long_class <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(d_long_class)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_long_class, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> value, <span class="at">col =</span> variable)) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Class Total"</span>, <span class="at">color =</span> <span class="st">"Class"</span>, <span class="at">title =</span> <span class="st">"Sample Path of Classes Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="class" class="level3">
+<h3 class="anchored" data-anchor-id="class">Class</h3>
+<p>Class queues shouldn’t have that many players in each queue. The only concerning ones should be bruiser and fighters, which do spike. But most of the classes are relatively equal. Specialist should have the lowest queue, as most players do not play this class specifically. But overall this graph seems representative of an actual League of Legends players journey. The largest bottle neck of this process should be connecting to the servers and the actual game itself which takes nearly an hour each. Tanks do show up at the top as well with the highest queues but the class queues themselves are very quick as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(game_c_total, <span class="fu">aes</span>(<span class="at">x =</span> Game, <span class="at">y =</span> count, <span class="at">fill =</span> Game)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Average Players in Each Game Queue"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Game"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Players in Queue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>game_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t.3 =</span> total_df<span class="sc">$</span>t<span class="fl">.3</span>, <span class="at">game_total =</span> total_df<span class="sc">$</span>game_total)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(game_df, <span class="fu">aes</span>(<span class="at">x =</span> t<span class="fl">.3</span>, <span class="at">y =</span> game_total)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Game Total"</span>, <span class="at">title =</span> <span class="st">"Class Game Total Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>game_t_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(game_t)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>game_t_df<span class="sc">$</span>total <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(game_t_df, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>game_t_df<span class="sc">$</span>t <span class="ot">&lt;-</span> W_n[,<span class="dv">3</span>]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>col_plot_game <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"V"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(game_t))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>d_long_game <span class="ot">&lt;-</span> <span class="fu">melt</span>(game_t_df[, <span class="fu">c</span>(<span class="st">"t"</span>, col_plot_game)], <span class="at">id.vars =</span> <span class="st">"t"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>d_long_game<span class="sc">$</span>variable <span class="ot">&lt;-</span> <span class="fu">factor</span>(d_long_game<span class="sc">$</span>variable, <span class="at">levels =</span> col_plot_game, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Game 1"</span>, <span class="st">"Game 2"</span>, <span class="st">"Game 3"</span>))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>d_long_game <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(d_long_game)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d_long_game, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> value, <span class="at">col =</span> variable)) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Time"</span>, <span class="at">y =</span> <span class="st">"Game Total"</span>, <span class="at">color =</span> <span class="st">"Game"</span>, <span class="at">title =</span> <span class="st">"Sample Path of Games Over Time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="game" class="level3">
+<h3 class="anchored" data-anchor-id="game">Game</h3>
+<p>It’s surprising to see Game 2 being so high with the queues. Again I expected to see a lot of volatility from this queue because the times are following a normal distribution instead. Game 3 having the shortest queues also makes sense, because the normal distribution it follows is way shorter than Game 2’s queue. Game 1 is in the middle and shows that the normal distribution affecting the queues does work.</p>
+<section id="notes" class="level4">
+<h4 class="anchored" data-anchor-id="notes">Notes</h4>
+<p>Again, I believed that the normal distribution was implemented correctly here. But it could be that it wasn’t correct and the transition matrix is working well. Unfortunately I don’t know the theory behind that to work yet.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>I hope my analytics and my simulation was enough exploration for the scope of this class. I believe my code and output are mostly correct with appropriate changes that go outside of the class. When thinking about Jacksonian Networks, I wasn’t expecting to use the transition matrices when changing from queue to queue. The discussion are correct because of the way that Is et them up. And while my code and premise do not align with what it sates on LibreText and Wikipedia. I felt that when I was taking the entirety of STAT 545, I didn’t understand the use of learning stochastic processes until I started reading about queuing theory. Especially when it comes to the work place and management and Jackson Networks. It’s obvious how management science uses this concept a lot and how they rely on graphs like the ones above. Not only could this work in queues, but call centers, product lines, DMV lines, and so much more. research into other areas I didn’t think could be useful to apply towards.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

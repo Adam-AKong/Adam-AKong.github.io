@@ -1,0 +1,9 @@
+---
+title: "Brawl Stars Analysis"
+author: "Adam Kong"
+date: "2024-12-06"
+categories: [Project]
+image: brawlstars.png
+---
+
+<embed src="DATA301_PROJECT_3.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

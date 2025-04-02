@@ -1,0 +1,13 @@
+---
+title: "School Modality Project"
+author: "Adam Kong, Alisa Krasilnikov, Dylan Le"
+date: "2024-12-09"
+categories: [Project]
+image: stat551.png
+---
+
+# School Modality Project
+
+Our *School Modality Project* examines the factors that influenced school districts’ decisions to adopt in-person, hybrid, or remote learning during the 2020-2021 school year. Using publicly available data from the CDC and school finance databases, we analyzed variables such as state, per-student spending, student enrollment, poverty rate, and demographics. Our findings indicate that districts with a higher proportion of white students were more likely to remain in-person, while larger districts and those with higher per-student spending tended to adopt hybrid or remote learning. Funding played a significant role in these decisions, as predominantly white districts received more resources, and higher spending facilitated smoother transitions to online learning through better access to technology. While our analysis provides valuable insights, we acknowledge ethical considerations such as missing IEP data, unclear terminology, and the need for equitable resource distribution. Ultimately, our project highlights how financial disparities and district size shaped learning modality decisions, emphasizing the importance of funding in determining educational access during the pandemic.
+
+<embed src="STAT551_PROJECT.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

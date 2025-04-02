@@ -1,0 +1,9 @@
+---
+title: "SUPERCELL Game Analysis"
+author: "Adam Kong"
+date: "2024-11-18"
+categories: [Project]
+image: supercell.png
+---
+
+<embed src="DATA301_PROJECT_2.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

@@ -1,0 +1,35 @@
+---
+title: "US Honey Production Project"
+author: "Adam Kong, Alisa Krasilnikov, Harshini Karthikeyan"
+date: "2023-12-06"
+categories: [Project]
+image: project_image.png
+---
+
+# US Honey Production Analysis
+
+Honey production in the United States is influenced by multiple factors, including environmental conditions, colony numbers, and market prices. This study examines key predictors of honey production value using data from 1995 to 2021, focusing on whether these factors vary by state and over time. The data, sourced from the US Honey Production dataset on Kaggle, is structured hierarchically with two levels. The first level consists of yearly observations, including variables such as Colonies Number, Yield Per Colony, Production, Stocks, and Average Price, while the second level accounts for state-level factors like land mass. Additional variables that were not included in the original data set were temperature, grassland size, and agricultural field size which were considered but excluded due to redundancy and insignificance.
+
+To analyze these factors, a mixed-effects model was applied. The model included fixed effects for colonies number, stocks, year, and their interaction, with an intercept of 3,075,000. The number of colonies had a significant positive effect (85.45), while stocks showed a negative association (-1.424). The interaction between stocks and year was also found to be statistically significant (0.1052). The results revealed substantial variability in honey production value across states, with state-level variance estimated at 7.68e+12. Additionally, the impact of colonies number varied by state, with a slope variance of 3,664. Despite these identified factors, a significant portion of the variability remained unexplained within states (5.59e+12). Overall, the model accounted for 57% of the total variation in honey production value.
+
+The findings suggest that the number of colonies and stock levels are the strongest predictors of honey production value, with their effects varying across states and over time. This highlights the importance of localized factors in honey production. Future studies should explore additional environmental and economic variables to enhance predictive accuracy and provide deeper insights into the dynamics of honey production in the United States.
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Embedded Slides</title>
+
+</head>
+
+<body>
+
+<embed src="STAT414_SLIDES.pdf" type="application/pdf" style="width:100%;height:100vh;" />
+
+</body>
+
+</html>

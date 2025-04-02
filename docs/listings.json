@@ -2,8 +2,16 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/posts/STAT365Project/index.html",
-      "/posts/STAT331Project/index.html"
+      "/posts/STAT418Project/index.html",
+      "/posts/STAT545Project/index.html",
+      "/posts/STAT551Project/index.html",
+      "/posts/DATA301Project_3/index.html",
+      "/posts/ITP303Project/index.html",
+      "/posts/DATA301Project_2/index.html",
+      "/posts/DATA301Project_1/index.html",
+      "/posts/STAT415Project/index.html",
+      "/posts/STAT417Project/index.html",
+      "/posts/STAT414Project/index.html"
     ]
   }
 ]

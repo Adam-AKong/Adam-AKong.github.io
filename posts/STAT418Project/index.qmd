@@ -1,0 +1,9 @@
+---
+title: "SAT Statewide Categorical Analysis Project"
+author: "Adam Kong, Sabrina Ahrendt, Franchesca Garcia, Julius Hoffman, Alex Tran"
+date: "2025-03-17"
+categories: [Project]
+image: stat418.png
+---
+
+<embed src="STAT418_PROJECT.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

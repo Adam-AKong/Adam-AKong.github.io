@@ -3,21 +3,16 @@ project:
   output-dir: docs
 
 website:
-  title: "Adam Kong"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - projects.qmd
       - resume.qmd
-    right:
-      - about.qmd
+  search: false
 
 format:
   html:
-    theme: lux
+    theme: journal
     css: styles.css
-    page-layout: full
-
-editor: visual
-
+    page-layout: article

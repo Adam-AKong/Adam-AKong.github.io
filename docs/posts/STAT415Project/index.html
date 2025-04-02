@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Adam Kong">
+<meta name="dcterms.date" content="2024-06-24">
+
+<title>2023 Basketball Bayesian Analysis</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.html">
+ <span class="menu-text">Resume</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">2023 Basketball Bayesian Analysis</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Projects</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Adam Kong </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 24, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>Our research question investigates how usage rate (USG) and minutes played per game (MP) affect an NBA player’s annual salary for the 2022-23 season. Usage rate is the percentage of a team’s possessions a player ends while on the court. It’s calculated by adding up a player’s field goal attempts, turnovers, and trips to the free throw line, and then dividing that by the team’s total of those plays when the player is on the court. Minutes played per game describes how many in-game minutes (there are 48 in-game minutes in a regular NBA game) a player averages per game.</p>
+<p>This data set contains numerous variables for players in the NBA. We are using USG and MP (as well as their interaction) as explanatory variables and log(Salary) as the response variable.</p>
+<p>The data set includes numerous variables for NBA players during the 2022-23 season. We decided to focus on the usage rate and minutes played per game statistics and how that affects a player’s salary. The data is publicly available because players’ salaries are reported by agents and reporters and in-game stats are often released by NBA stat keepers. Kaggle (where we got the data from) compiled the data set from numerous websites and databases.</p>
+<section id="pre-bayesian-analysis" class="level1">
+<h1>Pre-Bayesian Analysis</h1>
+<p>As seen below these explanatory variables are not very normal. However, we went into our analysis by transforming the response variable of salaries since salaries are much more likely to be skewed to the right without previous insepction of the dataset, since a few select players will have extreme salaries.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nba_salary<span class="sc">$</span>USG., nba_salary<span class="sc">$</span>Salary)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(nba_salary<span class="sc">$</span>MP, nba_salary<span class="sc">$</span>Salary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Possible transformations and inspection of data before analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nba_salary<span class="sc">$</span>Salary)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">sqrt</span>(nba_salary<span class="sc">$</span>Salary))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(nba_salary<span class="sc">$</span>Salary))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(nba_salary<span class="sc">$</span>Salary<span class="sc">/</span><span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="proposed-bayesian-model" class="level1">
+<h1>Proposed Bayesian Model</h1>
+<p><span class="math display">\[{\log(Y)} = {\beta_0} + {\beta_1}(USG) + {\beta_2}(MP) + {\beta_3}(USG*MP) + {\varepsilon}\]</span></p>
+</section>
+<section id="choice-of-likelihood" class="level1">
+<h1>Choice of Likelihood</h1>
+<p>We used a Normal likelihood to calculate the probability of observing a certain log(Salary) given certain parameters for the betas.</p>
+</section>
+<section id="assumptions" class="level1">
+<h1>Assumptions</h1>
+<p>Linearity: The relationship between log(Salary) and the explanatory variables is linear Homoscedasticity: variance of the residuals is constant Independence of errors: Residuals are independent of each other Normally distributed: Residuals are approximately normally distributed Independence of independent variables: included interaction effect in model to see how variables interact with each other.</p>
+</section>
+<section id="bayesian-model-analysis" class="level1">
+<h1>Bayesian Model Analysis</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>test_01 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Salary) <span class="sc">~</span> MP <span class="sc">+</span> USG. <span class="sc">+</span> MP<span class="sc">*</span>USG., <span class="at">data =</span> nba_salary)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test_01)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Salary) ~ MP + USG. + MP * USG., data = nba_salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.8611 -0.5311  0.2033  0.7138  2.7588 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 14.1414029  0.3791128  37.301  &lt; 2e-16 ***
+MP           0.0272010  0.0179315   1.517   0.1300    
+USG.        -0.0485190  0.0197029  -2.463   0.0142 *  
+MP:USG.      0.0033111  0.0008146   4.065 5.65e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.191 on 463 degrees of freedom
+Multiple R-squared:  0.4103,    Adjusted R-squared:  0.4064 
+F-statistic: 107.4 on 3 and 463 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(test_01)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We used BRMS to choose a prior distribution for the data. The model chose a student_t(3, 15.1, 2.5) distribution for the intercept and a student_t(3, 0, 2.5) distribution for sigma. The MP and USG variables have a flat prior, which is an improper distribution, but one that makes no assumption of the distribution.</p>
+</section>
+<section id="brms-chosen-prior" class="level1">
+<h1>BRMS Chosen Prior</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_prior</span>(<span class="at">data =</span> nba_salary,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">log</span>(Salary) <span class="sc">~</span> MP <span class="sc">+</span> USG. <span class="sc">+</span> MP<span class="sc">*</span>USG.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   prior     class    coef group resp dpar nlpar lb ub
+                  (flat)         b                                    
+                  (flat)         b      MP                            
+                  (flat)         b MP:USG.                            
+                  (flat)         b    USG.                            
+ student_t(3, 15.1, 2.5) Intercept                                    
+    student_t(3, 0, 2.5)     sigma                                0   
+       source
+      default
+ (vectorized)
+ (vectorized)
+ (vectorized)
+      default
+      default</code></pre>
+</div>
+</div>
+</section>
+<section id="brms-first-model" class="level1">
+<h1>BRMS (First Model)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">brm</span>(<span class="at">data =</span> nba_salary,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">log</span>(Salary) <span class="sc">~</span> MP <span class="sc">+</span> USG. <span class="sc">+</span> MP<span class="sc">*</span>USG.,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">refresh =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+</div>
+</section>
+<section id="brms-posterior-output-analysis" class="level1">
+<h1>BRMS Posterior Output Analysis</h1>
+<p>The posterior distribution does not change very much if the prior changes. This is because we have a large sample size for our data, which means that the data is going to hold the most weight in the posterior distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"viridis"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log(Salary) ~ MP + USG. + MP * USG. 
+   Data: nba_salary (Number of observations: 467) 
+  Draws: 4 chains, each with iter = 3500; warmup = 1000; thin = 1;
+         total post-warmup draws = 10000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept    14.14      0.38    13.41    14.89 1.00     4248     4638
+MP            0.03      0.02    -0.01     0.06 1.00     4643     5399
+USG.         -0.05      0.02    -0.09    -0.01 1.00     4372     5098
+MP:USG.       0.00      0.00     0.00     0.00 1.00     4436     4666
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     1.19      0.04     1.12     1.27 1.00     6379     5220
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+</div>
+<p>Note, that we did run an interaction between minutes played and player usage. We decided to keep that in when simulated because before simulation we found that the interaction was significant, but now it was not in the posterior. We did not find this out until after the simulation was ran, but we kept because it’s notable that minutes played and usage, while correlated, it’s interaction was not significant to the log salary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"purple"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(fit, <span class="at">ndraw =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Simulated distributions follow a similar distribution with the actual curve. The actual curve has some strange curves due to the salary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From this plot we can see that minutes played has a positive correlation with the usage rate. This is expected as generally players with a high minutes played will have a larger usage rate.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens_overlay</span>(fit, <span class="at">pars =</span> <span class="fu">vars</span>(b_Intercept, b_MP, b_USG., sigma))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looking good so far! The chains are very close to each other here.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">neff_ratio</span>(fit)[<span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_MP"</span>, <span class="st">"b_USG."</span>, <span class="st">"sigma"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>b_Intercept        b_MP      b_USG.       sigma 
+  0.4247532   0.4642651   0.4372386   0.5219679 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">neff_ratio</span>(fit)[<span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_MP"</span>, <span class="st">"b_USG."</span>, <span class="st">"sigma"</span>)] <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_neff</span>() <span class="sc">+</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">yaxis_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looks good.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(fit,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_MP"</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> <span class="fl">0.5</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob_outer =</span> <span class="fl">0.98</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>MP is a positive coefficent, just like before the simulation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"teal"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_MP"</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.5</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_MP"</span>),</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.8</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_MP"</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.98</span>,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Possibly may have some negative simulated values, but more positive.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_intervals</span>(fit,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_USG."</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> <span class="fl">0.5</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob_outer =</span> <span class="fl">0.98</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Surprisingly the coefficient for Usage is negative. Not very strong as usage has a range from 0 to 100, and most players have below 50 so not as big of an effect.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"teal"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_USG."</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.5</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_USG."</span>),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.8</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_areas</span>(fit,</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_USG."</span>),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="fl">0.98</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">point_est =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">=</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept, sigma)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>posterior <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> b_Intercept </th>
+   <th style="text-align:right;"> sigma </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.93006 </td>
+   <td style="text-align:right;"> 1.170048 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.02398 </td>
+   <td style="text-align:right;"> 1.143928 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 14.19821 </td>
+   <td style="text-align:right;"> 1.210008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.87291 </td>
+   <td style="text-align:right;"> 1.177849 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 14.62475 </td>
+   <td style="text-align:right;"> 1.207042 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 14.61113 </td>
+   <td style="text-align:right;"> 1.208182 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.71179 </td>
+   <td style="text-align:right;"> 1.202079 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.28116 </td>
+   <td style="text-align:right;"> 1.162212 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 14.10877 </td>
+   <td style="text-align:right;"> 1.172498 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 14.37647 </td>
+   <td style="text-align:right;"> 1.240193 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>posterior_mean <span class="ot">=</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept) <span class="sc">|&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Intercept_y =</span> b_Intercept)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>posterior_mean <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> Intercept_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.93006 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.02398 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 14.19821 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.87291 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 14.62475 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 14.61113 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.71179 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.28116 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 14.10877 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 14.37647 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>posterior_sigma <span class="ot">=</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(sigma) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">sigma_y =</span> sigma)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>posterior_sigma <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> sigma_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1.170048 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1.143928 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 1.210008 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 1.177849 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 1.207042 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 1.208182 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 1.202079 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 1.162212 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 1.172498 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 1.240193 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="posterior-population-analysis" class="level1">
+<h1>Posterior Population Analysis</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior<span class="sc">$</span>b_Intercept, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      10%      25%      50%      75%      90%      99% 
+13.26899 13.66008 13.87919 14.13453 14.39805 14.62570 15.02639 </code></pre>
+</div>
+</div>
+<p>There is a 50% chance that the population mean salary is between <span class="math inline">\(e^{13.87}\)</span> and <span class="math inline">\(e^{14.38}\)</span> dollars. There is an 80% chance that the population mean salary is between <span class="math inline">\(e^{13.63}\)</span> and <span class="math inline">\(e^{14.64}\)</span> dollars. There is a 98% chance that the population mean salary is between <span class="math inline">\(e^{13.23}\)</span> and <span class="math inline">\(e^{15.04}\)</span> dollars.</p>
+<p><span class="math inline">\(e^{13.23}\)</span> is roughly around 556,821.5 dollars and <span class="math inline">\(e^{15.04}\)</span> is roughly around 3,402,429 dollars</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior<span class="sc">$</span>sigma, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      10%      25%      50%      75%      90%      99% 
+1.106558 1.143666 1.166100 1.192325 1.218613 1.243518 1.286120 </code></pre>
+</div>
+</div>
+<p>There is a 50% chance that the population SD of salary is between <span class="math inline">\(e^{1.17}\)</span> and <span class="math inline">\(e^{1.22}\)</span> dollars. There is an 80% chance that the population SD of salary is between <span class="math inline">\(e^{1.14}\)</span> and <span class="math inline">\(e^{1.25}\)</span> dollars. There is an 98% chance that the population SD of salary is between <span class="math inline">\(e^{1.11}\)</span> and <span class="math inline">\(e^{1.29}\)</span> dollars.</p>
+<p><span class="math inline">\(e^{1.11}\)</span> is roughly around 3.03 dollars and <span class="math inline">\(e^{1.29}\)</span> is roughly around 3.63 dollars. This is a little strange, but since we transformed our response, the standard deviation likely wasn’t as varied transformed.</p>
+</section>
+<section id="stephen-curry-posterior-analysis-model-1" class="level1">
+<h1>Stephen Curry Posterior Analysis (Model 1)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>posterior_steph <span class="ot">=</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept, b_MP, b_USG., <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span>, sigma) <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Steph_y =</span> b_Intercept <span class="sc">+</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>           b_MP <span class="sc">*</span> <span class="fl">34.7</span> <span class="sc">+</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>           b_USG. <span class="sc">*</span> <span class="fl">31.0</span> <span class="sc">+</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span> <span class="sc">*</span> <span class="fl">34.7</span> <span class="sc">*</span> <span class="fl">31.0</span>)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>posterior_steph <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> b_Intercept </th>
+   <th style="text-align:right;"> b_MP </th>
+   <th style="text-align:right;"> b_USG. </th>
+   <th style="text-align:right;"> b_MP:USG. </th>
+   <th style="text-align:right;"> sigma </th>
+   <th style="text-align:right;"> Steph_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.93006 </td>
+   <td style="text-align:right;"> 0.0370065 </td>
+   <td style="text-align:right;"> -0.0493851 </td>
+   <td style="text-align:right;"> 0.0033027 </td>
+   <td style="text-align:right;"> 1.170048 </td>
+   <td style="text-align:right;"> 17.23599 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.02398 </td>
+   <td style="text-align:right;"> 0.0171735 </td>
+   <td style="text-align:right;"> -0.0462256 </td>
+   <td style="text-align:right;"> 0.0039307 </td>
+   <td style="text-align:right;"> 1.143928 </td>
+   <td style="text-align:right;"> 17.41518 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 14.19821 </td>
+   <td style="text-align:right;"> 0.0382640 </td>
+   <td style="text-align:right;"> -0.0635444 </td>
+   <td style="text-align:right;"> 0.0032073 </td>
+   <td style="text-align:right;"> 1.210008 </td>
+   <td style="text-align:right;"> 17.00620 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.87291 </td>
+   <td style="text-align:right;"> 0.0388952 </td>
+   <td style="text-align:right;"> -0.0278952 </td>
+   <td style="text-align:right;"> 0.0026233 </td>
+   <td style="text-align:right;"> 1.177849 </td>
+   <td style="text-align:right;"> 17.17972 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 14.62475 </td>
+   <td style="text-align:right;"> -0.0037177 </td>
+   <td style="text-align:right;"> -0.0744778 </td>
+   <td style="text-align:right;"> 0.0046737 </td>
+   <td style="text-align:right;"> 1.207042 </td>
+   <td style="text-align:right;"> 17.21441 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 14.61113 </td>
+   <td style="text-align:right;"> -0.0035954 </td>
+   <td style="text-align:right;"> -0.0732371 </td>
+   <td style="text-align:right;"> 0.0046510 </td>
+   <td style="text-align:right;"> 1.208182 </td>
+   <td style="text-align:right;"> 17.21910 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.71179 </td>
+   <td style="text-align:right;"> 0.0440438 </td>
+   <td style="text-align:right;"> -0.0294713 </td>
+   <td style="text-align:right;"> 0.0027034 </td>
+   <td style="text-align:right;"> 1.202079 </td>
+   <td style="text-align:right;"> 17.23456 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.28116 </td>
+   <td style="text-align:right;"> 0.0675191 </td>
+   <td style="text-align:right;"> -0.0065154 </td>
+   <td style="text-align:right;"> 0.0015795 </td>
+   <td style="text-align:right;"> 1.162212 </td>
+   <td style="text-align:right;"> 17.12118 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 14.10877 </td>
+   <td style="text-align:right;"> 0.0239218 </td>
+   <td style="text-align:right;"> -0.0450594 </td>
+   <td style="text-align:right;"> 0.0033476 </td>
+   <td style="text-align:right;"> 1.172498 </td>
+   <td style="text-align:right;"> 17.14304 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 14.37647 </td>
+   <td style="text-align:right;"> 0.0260230 </td>
+   <td style="text-align:right;"> -0.0637439 </td>
+   <td style="text-align:right;"> 0.0035893 </td>
+   <td style="text-align:right;"> 1.240193 </td>
+   <td style="text-align:right;"> 17.16445 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>posterior_steph <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Steph_y)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(<span class="at">.width =</span> <span class="fu">c</span>(<span class="fl">0.80</span>, <span class="fl">0.98</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> bayes_col[<span class="st">"posterior"</span>]) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior_steph<span class="sc">$</span>Steph_y, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      10%      25%      50%      75%      90%      99% 
+16.75231 16.92697 17.03057 17.14424 17.25532 17.36493 17.53746 </code></pre>
+</div>
+</div>
+<p>There is a 50% chance that the salary of a player with Stephen Curry’s USG and MP is between <span class="math inline">\(e^{17.031}\)</span> and <span class="math inline">\(e^{17.258}\)</span> dollars. There is an 80% chance that the salary of a player with Stephen Curry’s USG and MP is between <span class="math inline">\(e^{16.926}\)</span> and <span class="math inline">\(e^{17.361}\)</span> dollars. There is a 98% chance that the salary of a player with Stephen Curry’s USG and MP is between <span class="math inline">\(e^{16.747}\)</span> and <span class="math inline">\(e^{17.533}\)</span> dollars.</p>
+<p>In other words for the 98% credible interval, there is a 98% chance that the salary of a player with Stephen Curry’s USG and MP is between 18,755,545 and 41,160,927 dollars. This is a really accurate prediction, especially since Stephen Curry’s salaries is the highest in the data set.</p>
+</section>
+<section id="davion-mitchell-posterior-analysis-model-1" class="level1">
+<h1>Davion Mitchell Posterior Analysis (Model 1)</h1>
+<p>We then inspected a player in the middle of the list, Davion Mitchell who plays a decent amount of games and is a reasonably average NBA player to analyze.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>posterior_davion <span class="ot">=</span> fit <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept, b_MP, b_USG., <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span>, sigma) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Davion_y =</span> b_Intercept <span class="sc">+</span> </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>           b_MP <span class="sc">*</span> <span class="fl">14.1</span> <span class="sc">+</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>           b_USG. <span class="sc">*</span> <span class="fl">31.0</span> <span class="sc">+</span> </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span> <span class="sc">*</span> <span class="fl">14.1</span> <span class="sc">*</span> <span class="fl">31.0</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>posterior_davion <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> b_Intercept </th>
+   <th style="text-align:right;"> b_MP </th>
+   <th style="text-align:right;"> b_USG. </th>
+   <th style="text-align:right;"> b_MP:USG. </th>
+   <th style="text-align:right;"> sigma </th>
+   <th style="text-align:right;"> Davion_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.93006 </td>
+   <td style="text-align:right;"> 0.0370065 </td>
+   <td style="text-align:right;"> -0.0493851 </td>
+   <td style="text-align:right;"> 0.0033027 </td>
+   <td style="text-align:right;"> 1.170048 </td>
+   <td style="text-align:right;"> 14.36454 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.02398 </td>
+   <td style="text-align:right;"> 0.0171735 </td>
+   <td style="text-align:right;"> -0.0462256 </td>
+   <td style="text-align:right;"> 0.0039307 </td>
+   <td style="text-align:right;"> 1.143928 </td>
+   <td style="text-align:right;"> 14.55125 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 14.19821 </td>
+   <td style="text-align:right;"> 0.0382640 </td>
+   <td style="text-align:right;"> -0.0635444 </td>
+   <td style="text-align:right;"> 0.0032073 </td>
+   <td style="text-align:right;"> 1.210008 </td>
+   <td style="text-align:right;"> 14.16977 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.87291 </td>
+   <td style="text-align:right;"> 0.0388952 </td>
+   <td style="text-align:right;"> -0.0278952 </td>
+   <td style="text-align:right;"> 0.0026233 </td>
+   <td style="text-align:right;"> 1.177849 </td>
+   <td style="text-align:right;"> 14.70324 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 14.62475 </td>
+   <td style="text-align:right;"> -0.0037177 </td>
+   <td style="text-align:right;"> -0.0744778 </td>
+   <td style="text-align:right;"> 0.0046737 </td>
+   <td style="text-align:right;"> 1.207042 </td>
+   <td style="text-align:right;"> 14.30638 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 14.61113 </td>
+   <td style="text-align:right;"> -0.0035954 </td>
+   <td style="text-align:right;"> -0.0732371 </td>
+   <td style="text-align:right;"> 0.0046510 </td>
+   <td style="text-align:right;"> 1.208182 </td>
+   <td style="text-align:right;"> 14.32304 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.71179 </td>
+   <td style="text-align:right;"> 0.0440438 </td>
+   <td style="text-align:right;"> -0.0294713 </td>
+   <td style="text-align:right;"> 0.0027034 </td>
+   <td style="text-align:right;"> 1.202079 </td>
+   <td style="text-align:right;"> 14.60086 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.28116 </td>
+   <td style="text-align:right;"> 0.0675191 </td>
+   <td style="text-align:right;"> -0.0065154 </td>
+   <td style="text-align:right;"> 0.0015795 </td>
+   <td style="text-align:right;"> 1.162212 </td>
+   <td style="text-align:right;"> 14.72161 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 14.10877 </td>
+   <td style="text-align:right;"> 0.0239218 </td>
+   <td style="text-align:right;"> -0.0450594 </td>
+   <td style="text-align:right;"> 0.0033476 </td>
+   <td style="text-align:right;"> 1.172498 </td>
+   <td style="text-align:right;"> 14.51247 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 14.37647 </td>
+   <td style="text-align:right;"> 0.0260230 </td>
+   <td style="text-align:right;"> -0.0637439 </td>
+   <td style="text-align:right;"> 0.0035893 </td>
+   <td style="text-align:right;"> 1.240193 </td>
+   <td style="text-align:right;"> 14.33623 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>posterior_davion <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Davion_y)) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(<span class="at">.width =</span> <span class="fu">c</span>(<span class="fl">0.80</span>, <span class="fl">0.98</span>),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> bayes_col[<span class="st">"posterior"</span>]) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior_davion<span class="sc">$</span>Davion_y, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>, <span class="fl">0.90</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      10%      25%      50%      75%      90%      99% 
+14.06535 14.25147 14.35474 14.46883 14.58527 14.69119 14.87951 </code></pre>
+</div>
+</div>
+<p>There is a 50% chance that the salary of a player with Davion Mitchell’s USG and MP is between <span class="math inline">\(e^{14.354}\)</span> and <span class="math inline">\(e^{14.590}\)</span> dollars. There is an 80% chance that the salary of a player with Davion Mitchell’s USG and MP is between <span class="math inline">\(e^{14.250}\)</span> and <span class="math inline">\(e^{14.698}\)</span> dollars. There is a 98% chance that the salary of a player with Davion Mitchell’s USG and MP is between <span class="math inline">\(e^{14.070}\)</span> and <span class="math inline">\(e^{14.866}\)</span> dollars.</p>
+<p>For the 98% credible interval, there is a 98% chance that the salary of a player with Davion Mitchell’s USG and MP is between 1,289,803 and 2,859,050 dollars. This is a pretty accurate prediction to his actual salary.</p>
+</section>
+<section id="brms-model-2" class="level1">
+<h1>BRMS (Model 2)</h1>
+<p>We did another analysis below for both Stephen Curry and Davion Mitchell. We saw that Davion Mitchell had a lot more games played than Stephen Curry but had significantly lower pay. We wanted to see if games played had more of an effect on players like Davion, but would not players with higher stats like Curry.</p>
+<p>Will only look at the 98% credible interval for this analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>test_02 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Salary) <span class="sc">~</span> MP <span class="sc">+</span> USG. <span class="sc">+</span> GP <span class="sc">+</span> MP<span class="sc">*</span>USG., <span class="at">data =</span> nba_salary)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(test_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Salary) ~ MP + USG. + GP + MP * USG., data = nba_salary)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.8219 -0.6882  0.0414  0.6706  3.6089 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 13.7403724  0.3433410  40.020  &lt; 2e-16 ***
+MP          -0.0377184  0.0172884  -2.182   0.0296 *  
+USG.        -0.0441375  0.0177373  -2.488   0.0132 *  
+GP           0.0278838  0.0026632  10.470  &lt; 2e-16 ***
+MP:USG.      0.0039952  0.0007361   5.428 9.24e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.072 on 462 degrees of freedom
+Multiple R-squared:  0.5233,    Adjusted R-squared:  0.5192 
+F-statistic: 126.8 on 4 and 462 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(test_02)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fit_2 <span class="ot">&lt;-</span> <span class="fu">brm</span>(<span class="at">data =</span> nba_salary,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">gaussian</span>(),</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">log</span>(Salary) <span class="sc">~</span> MP <span class="sc">+</span> USG. <span class="sc">+</span> GP <span class="sc">+</span> MP<span class="sc">*</span>USG.,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">refresh =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: gaussian 
+  Links: mu = identity; sigma = identity 
+Formula: log(Salary) ~ MP + USG. + GP + MP * USG. 
+   Data: nba_salary (Number of observations: 467) 
+  Draws: 4 chains, each with iter = 3500; warmup = 1000; thin = 1;
+         total post-warmup draws = 10000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept    13.74      0.35    13.07    14.42 1.00     4531     5808
+MP           -0.04      0.02    -0.07    -0.00 1.00     4528     5541
+USG.         -0.04      0.02    -0.08    -0.01 1.00     4761     5953
+GP            0.03      0.00     0.02     0.03 1.00     8467     7271
+MP:USG.       0.00      0.00     0.00     0.01 1.00     4451     5751
+
+Further Distributional Parameters:
+      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sigma     1.07      0.04     1.01     1.15 1.00     6798     6487
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"purple"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(fit_2, <span class="at">ndraw =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A little more off than model 1 ppcheck.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(fit_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From this plot we can see that minutes played still has a positive correlation with the usage rate. Both minutes played and usage rate is independent of games played.</p>
+</section>
+<section id="stephen-curry-posterior-analysis-model-2" class="level1">
+<h1>Stephen Curry Posterior Analysis (Model 2)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>posterior_steph_2 <span class="ot">=</span> fit_2 <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept, b_MP, b_USG., b_GP, <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span>, sigma) <span class="sc">|&gt;</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Steph_y =</span> b_Intercept <span class="sc">+</span> </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>           b_MP <span class="sc">*</span> <span class="fl">34.7</span> <span class="sc">+</span> </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>           b_USG. <span class="sc">*</span> <span class="fl">31.0</span> <span class="sc">+</span> </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>           b_GP <span class="sc">*</span> <span class="dv">56</span> <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span> <span class="sc">*</span> <span class="fl">34.7</span> <span class="sc">*</span> <span class="fl">31.0</span>)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>posterior_steph_2 <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> b_Intercept </th>
+   <th style="text-align:right;"> b_MP </th>
+   <th style="text-align:right;"> b_USG. </th>
+   <th style="text-align:right;"> b_GP </th>
+   <th style="text-align:right;"> b_MP:USG. </th>
+   <th style="text-align:right;"> sigma </th>
+   <th style="text-align:right;"> Steph_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.49536 </td>
+   <td style="text-align:right;"> -0.0244795 </td>
+   <td style="text-align:right;"> -0.0286339 </td>
+   <td style="text-align:right;"> 0.0265672 </td>
+   <td style="text-align:right;"> 0.0034560 </td>
+   <td style="text-align:right;"> 1.104117 </td>
+   <td style="text-align:right;"> 16.96370 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.19783 </td>
+   <td style="text-align:right;"> -0.0642514 </td>
+   <td style="text-align:right;"> -0.0664605 </td>
+   <td style="text-align:right;"> 0.0286436 </td>
+   <td style="text-align:right;"> 0.0050852 </td>
+   <td style="text-align:right;"> 1.064857 </td>
+   <td style="text-align:right;"> 16.98220 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 13.83181 </td>
+   <td style="text-align:right;"> -0.0405200 </td>
+   <td style="text-align:right;"> -0.0542585 </td>
+   <td style="text-align:right;"> 0.0287102 </td>
+   <td style="text-align:right;"> 0.0044288 </td>
+   <td style="text-align:right;"> 1.057402 </td>
+   <td style="text-align:right;"> 17.11557 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.91159 </td>
+   <td style="text-align:right;"> -0.0210095 </td>
+   <td style="text-align:right;"> -0.0533979 </td>
+   <td style="text-align:right;"> 0.0239638 </td>
+   <td style="text-align:right;"> 0.0038592 </td>
+   <td style="text-align:right;"> 1.042943 </td>
+   <td style="text-align:right;"> 17.02054 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 13.64288 </td>
+   <td style="text-align:right;"> -0.0330182 </td>
+   <td style="text-align:right;"> -0.0337974 </td>
+   <td style="text-align:right;"> 0.0264381 </td>
+   <td style="text-align:right;"> 0.0037901 </td>
+   <td style="text-align:right;"> 1.079796 </td>
+   <td style="text-align:right;"> 17.00698 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 13.50358 </td>
+   <td style="text-align:right;"> -0.0324451 </td>
+   <td style="text-align:right;"> -0.0336407 </td>
+   <td style="text-align:right;"> 0.0264968 </td>
+   <td style="text-align:right;"> 0.0040996 </td>
+   <td style="text-align:right;"> 1.079482 </td>
+   <td style="text-align:right;"> 17.22863 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.54291 </td>
+   <td style="text-align:right;"> -0.0335147 </td>
+   <td style="text-align:right;"> -0.0340889 </td>
+   <td style="text-align:right;"> 0.0301641 </td>
+   <td style="text-align:right;"> 0.0035574 </td>
+   <td style="text-align:right;"> 1.081017 </td>
+   <td style="text-align:right;"> 16.83906 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.91689 </td>
+   <td style="text-align:right;"> -0.0436091 </td>
+   <td style="text-align:right;"> -0.0505774 </td>
+   <td style="text-align:right;"> 0.0263818 </td>
+   <td style="text-align:right;"> 0.0043637 </td>
+   <td style="text-align:right;"> 1.053566 </td>
+   <td style="text-align:right;"> 17.00722 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 13.90655 </td>
+   <td style="text-align:right;"> -0.0440917 </td>
+   <td style="text-align:right;"> -0.0553922 </td>
+   <td style="text-align:right;"> 0.0297604 </td>
+   <td style="text-align:right;"> 0.0043289 </td>
+   <td style="text-align:right;"> 1.025806 </td>
+   <td style="text-align:right;"> 16.98257 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 13.78923 </td>
+   <td style="text-align:right;"> -0.0493760 </td>
+   <td style="text-align:right;"> -0.0417026 </td>
+   <td style="text-align:right;"> 0.0296250 </td>
+   <td style="text-align:right;"> 0.0042616 </td>
+   <td style="text-align:right;"> 1.039411 </td>
+   <td style="text-align:right;"> 17.02629 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>posterior_steph_2 <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Steph_y)) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(<span class="at">.width =</span> <span class="fu">c</span>(<span class="fl">0.80</span>, <span class="fl">0.98</span>),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> bayes_col[<span class="st">"posterior"</span>]) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior_steph_2<span class="sc">$</span>Steph_y, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      99% 
+16.56222 17.27539 </code></pre>
+</div>
+</div>
+<p>There is a 98% chance that the salary of a player with Stephen Curry’s USG, MP, and GP is between <span class="math inline">\(e^{16.56}\)</span> and <span class="math inline">\(e^{17.29}\)</span> dollars.</p>
+<p>There is a 98% chance that a player with Stephen Curry’s stats will have a predicted salary of 15,556,669 to 32,130,940 dollars. This seems more incorrect as Curry has a salary closer to 40 million dollars, but reasonable when it comes to number of games played. Curry is an outlier in terms of salary, so this prediction makes sense.</p>
+</section>
+<section id="davion-mitchell-posterior-analysis-model-2" class="level1">
+<h1>Davion Mitchell Posterior Analysis (Model 2)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>posterior_davion_2 <span class="ot">=</span> fit_2 <span class="sc">|&gt;</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread_draws</span>(b_Intercept, b_MP, b_USG., b_GP, <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span>, sigma) <span class="sc">|&gt;</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Davion_y =</span> b_Intercept <span class="sc">+</span> </span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>           b_MP <span class="sc">*</span> <span class="fl">14.1</span> <span class="sc">+</span> </span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>           b_USG. <span class="sc">*</span> <span class="fl">31.0</span> <span class="sc">+</span> </span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>           b_GP <span class="sc">*</span> <span class="dv">80</span> <span class="sc">+</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">`</span><span class="at">b_MP:USG.</span><span class="st">`</span> <span class="sc">*</span> <span class="fl">14.1</span> <span class="sc">*</span> <span class="fl">31.0</span>)</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>posterior_davion_2 <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> <span class="fu">kbl</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;"> .chain </th>
+   <th style="text-align:right;"> .iteration </th>
+   <th style="text-align:right;"> .draw </th>
+   <th style="text-align:right;"> b_Intercept </th>
+   <th style="text-align:right;"> b_MP </th>
+   <th style="text-align:right;"> b_USG. </th>
+   <th style="text-align:right;"> b_GP </th>
+   <th style="text-align:right;"> b_MP:USG. </th>
+   <th style="text-align:right;"> sigma </th>
+   <th style="text-align:right;"> Davion_y </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 13.49536 </td>
+   <td style="text-align:right;"> -0.0244795 </td>
+   <td style="text-align:right;"> -0.0286339 </td>
+   <td style="text-align:right;"> 0.0265672 </td>
+   <td style="text-align:right;"> 0.0034560 </td>
+   <td style="text-align:right;"> 1.104117 </td>
+   <td style="text-align:right;"> 15.89856 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 14.19783 </td>
+   <td style="text-align:right;"> -0.0642514 </td>
+   <td style="text-align:right;"> -0.0664605 </td>
+   <td style="text-align:right;"> 0.0286436 </td>
+   <td style="text-align:right;"> 0.0050852 </td>
+   <td style="text-align:right;"> 1.064857 </td>
+   <td style="text-align:right;"> 15.74583 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 13.83181 </td>
+   <td style="text-align:right;"> -0.0405200 </td>
+   <td style="text-align:right;"> -0.0542585 </td>
+   <td style="text-align:right;"> 0.0287102 </td>
+   <td style="text-align:right;"> 0.0044288 </td>
+   <td style="text-align:right;"> 1.057402 </td>
+   <td style="text-align:right;"> 15.81110 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 13.91159 </td>
+   <td style="text-align:right;"> -0.0210095 </td>
+   <td style="text-align:right;"> -0.0533979 </td>
+   <td style="text-align:right;"> 0.0239638 </td>
+   <td style="text-align:right;"> 0.0038592 </td>
+   <td style="text-align:right;"> 1.042943 </td>
+   <td style="text-align:right;"> 15.56398 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 13.64288 </td>
+   <td style="text-align:right;"> -0.0330182 </td>
+   <td style="text-align:right;"> -0.0337974 </td>
+   <td style="text-align:right;"> 0.0264381 </td>
+   <td style="text-align:right;"> 0.0037901 </td>
+   <td style="text-align:right;"> 1.079796 </td>
+   <td style="text-align:right;"> 15.90131 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 13.50358 </td>
+   <td style="text-align:right;"> -0.0324451 </td>
+   <td style="text-align:right;"> -0.0336407 </td>
+   <td style="text-align:right;"> 0.0264968 </td>
+   <td style="text-align:right;"> 0.0040996 </td>
+   <td style="text-align:right;"> 1.079482 </td>
+   <td style="text-align:right;"> 15.91492 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 13.54291 </td>
+   <td style="text-align:right;"> -0.0335147 </td>
+   <td style="text-align:right;"> -0.0340889 </td>
+   <td style="text-align:right;"> 0.0301641 </td>
+   <td style="text-align:right;"> 0.0035574 </td>
+   <td style="text-align:right;"> 1.081017 </td>
+   <td style="text-align:right;"> 15.98166 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 13.91689 </td>
+   <td style="text-align:right;"> -0.0436091 </td>
+   <td style="text-align:right;"> -0.0505774 </td>
+   <td style="text-align:right;"> 0.0263818 </td>
+   <td style="text-align:right;"> 0.0043637 </td>
+   <td style="text-align:right;"> 1.053566 </td>
+   <td style="text-align:right;"> 15.75204 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 13.90655 </td>
+   <td style="text-align:right;"> -0.0440917 </td>
+   <td style="text-align:right;"> -0.0553922 </td>
+   <td style="text-align:right;"> 0.0297604 </td>
+   <td style="text-align:right;"> 0.0043289 </td>
+   <td style="text-align:right;"> 1.025806 </td>
+   <td style="text-align:right;"> 15.84069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 13.78923 </td>
+   <td style="text-align:right;"> -0.0493760 </td>
+   <td style="text-align:right;"> -0.0417026 </td>
+   <td style="text-align:right;"> 0.0296250 </td>
+   <td style="text-align:right;"> 0.0042616 </td>
+   <td style="text-align:right;"> 1.039411 </td>
+   <td style="text-align:right;"> 16.03299 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>posterior_davion_2 <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Davion_y)) <span class="sc">+</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(<span class="at">.width =</span> <span class="fu">c</span>(<span class="fl">0.80</span>, <span class="fl">0.98</span>),</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> bayes_col[<span class="st">"posterior"</span>]) <span class="sc">+</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(posterior_davion_2<span class="sc">$</span>Davion_y, <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      1%      99% 
+15.34616 16.28940 </code></pre>
+</div>
+</div>
+<p>There is a 98% chance that the salary of a player with Davion Mitchell’s USG, MP, and GP is between <span class="math inline">\(e^{15.35}\)</span> and <span class="math inline">\(e^{16.28}\)</span> dollars.</p>
+<p>In other words, there is a 98% chance that a player with Davion Mitchell’s stats will have a predicted salary of 4,638,956 to 11,757,478 dollars. This seems more incorrect as Mitchell has a salary closer to 1 million dollars. Games played doesn’t mean a player gets paid more, but this model will over predicted players who have been in a lot of games. Davion Mitchell is an outlier in terms of the games played.</p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Based on the credible intervals we obtained, our model only using minutes played and usage rate produces a closer prediction to the actual salary values. After including games played in our model, our predictions fell further from the actual numbers. Although, we attempted to include more variables, our predictions became more off because these variables don’t describe salary behavior as well.</p>
+<p>One shortcoming we saw of our chosen model is that it isn’t not highly descriptive and doesn’t a describe the wide range of individual player statistics. For example is that certain players will have a lot of minutes played per game, has a high usage rate, but only one game played and not be paid over one million dollars. Their salary will be over predicted.</p>
+<p>There is one point in Handout 27 Model Comparison that Professor Ross points out about a simple model versus a complex model. “However, we don’t always want to just choose the more complex model. Always choosing the more complex model over fits the data.” As we saw with our more complex model which included games played, it did over fit Davion Mitchell’s salary significance, despite being considered what would be an average player with an average players stats. So for this analysis we focused on minutes played (MP) and usage rate (USG), since we believed salaries would be affected the most significantly by these statistics and would describe salaries within the data set the best.</p>
+<p>One thing we considered while concluding this report is the popularity of each player that was not mentioned in this data set. Many increases in salaries include outside variables such as endorsements, brand deals, and other marketability each player has. Player statistics is one aspect of salary, but outside influence could have much more effect and should be furthered analyzed.</p>
+<p>Relating and concluding our research with the Bayesian perspective, we found that our Bayesian analysis was valuable in our context since the salaries of players are constantly changing every season. It would be inaccurate to state our parameters without looking at the data. This Bayesian analysis approach allowed us to account for the always-changing landscape of basketball salaries.</p>
+</section>
+<section id="brms-untransformed-response-model" class="level1">
+<h1>BRMS Untransformed Response Model</h1>
+<p>Down below is our first model with no transformation. Although this model could be used, we found that a normal distribution in BRMS would’ve lead to an easier interpretation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit_brms_prior_3 <span class="ot">&lt;-</span> <span class="fu">brm</span>(<span class="at">data =</span> nba_salary,</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">exponential</span>(),</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>           Salary <span class="sc">~</span> MP <span class="sc">+</span> USG.,</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sample_prior =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="dv">3500</span>,</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">chains =</span> <span class="dv">4</span>,</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">refresh =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"viridis"</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit_brms_prior_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_brms_prior_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: exponential 
+  Links: mu = log 
+Formula: Salary ~ MP + USG. 
+   Data: nba_salary (Number of observations: 467) 
+  Draws: 4 chains, each with iter = 3500; warmup = 1000; thin = 1;
+         total post-warmup draws = 10000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept    13.36      0.16    13.03    13.68 1.00    10337     7969
+MP            0.09      0.01     0.08     0.10 1.00     7383     7840
+USG.          0.02      0.01     0.00     0.04 1.00     6700     7152
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"purple"</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pp_check</span>(fit_brms_prior_3, <span class="at">ndraw =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Similarly, simulated distributions follow a similar distribution with the actual curve. But again, the actual curve has some strange curves due to the salary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_brms_prior_3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Family: exponential 
+  Links: mu = log 
+Formula: Salary ~ MP + USG. 
+   Data: nba_salary (Number of observations: 467) 
+  Draws: 4 chains, each with iter = 3500; warmup = 1000; thin = 1;
+         total post-warmup draws = 10000
+
+Regression Coefficients:
+          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept    13.36      0.16    13.03    13.68 1.00    10337     7969
+MP            0.09      0.01     0.08     0.10 1.00     7383     7840
+USG.          0.02      0.01     0.00     0.04 1.00     6700     7152
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

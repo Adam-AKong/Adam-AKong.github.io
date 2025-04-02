@@ -1,0 +1,450 @@
+---
+title: "2023 Basketball Bayesian Analysis"
+author: "Adam Kong, Cameron An"
+date: "2024-06-24"
+categories: [Project]
+image: stat415.png
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(tidybayes)
+library(brms)
+library(bayesplot)
+library(kableExtra)
+library(here)
+
+bayes_col = c("#56B4E9", "#E69F00", "#009E73", "#CC79A7", "#CC79A7")
+names(bayes_col) = c("prior", "likelihood", "posterior", "prior_predict", "posterior_predict")
+
+bayes_lty = c("dashed", "dotted", "solid")
+names(bayes_lty) = c("prior", "likelihood", "posterior")
+
+nba_salary <- read_csv(here::here("docs", "posts", "STAT415Project", "nba_2022-23_all_stats_with_salary.csv"))
+nba_salary$USG. <- nba_salary$`USG%`
+```
+
+Our research question investigates how usage rate (USG) and minutes played per game (MP) affect an NBA player’s annual salary for the 2022-23 season. Usage rate is the percentage of a team’s possessions a player ends while on the court. It's calculated by adding up a player's field goal attempts, turnovers, and trips to the free throw line, and then dividing that by the team's total of those plays when the player is on the court. Minutes played per game describes how many in-game minutes (there are 48 in-game minutes in a regular NBA game) a player averages per game.
+
+This data set contains numerous variables for players in the NBA. We are using USG and MP (as well as their interaction) as explanatory variables and log(Salary) as the response variable.
+
+The data set includes numerous variables for NBA players during the 2022-23 season. We decided to focus on the usage rate and minutes played per game statistics and how that affects a player’s salary. The data is publicly available because players’ salaries are reported by agents and reporters and in-game stats are often released by NBA stat keepers. Kaggle (where we got the data from) compiled the data set from numerous websites and databases.
+
+# Pre-Bayesian Analysis
+
+As seen below these explanatory variables are not very normal. However, we went into our analysis by transforming the response variable of salaries since salaries are much more likely to be skewed to the right without previous insepction of the dataset, since a few select players will have extreme salaries.
+
+```{r}
+par(mfrow = c(1, 2))
+plot(nba_salary$USG., nba_salary$Salary)
+plot(nba_salary$MP, nba_salary$Salary)
+```
+
+Possible transformations and inspection of data before analysis.
+
+```{r}
+par(mfrow = c(2, 2))
+hist(nba_salary$Salary)
+hist(sqrt(nba_salary$Salary))
+hist(log(nba_salary$Salary))
+hist(nba_salary$Salary/1000000)
+```
+
+# Proposed Bayesian Model
+
+$${\log(Y)} = {\beta_0} + {\beta_1}(USG) + {\beta_2}(MP) + {\beta_3}(USG*MP) + {\varepsilon}$$
+
+# Choice of Likelihood
+
+We used a Normal likelihood to calculate the probability of observing a certain log(Salary) given certain parameters for the betas.
+
+# Assumptions
+
+Linearity: The relationship between log(Salary) and the explanatory variables is linear Homoscedasticity: variance of the residuals is constant Independence of errors: Residuals are independent of each other Normally distributed: Residuals are approximately normally distributed Independence of independent variables: included interaction effect in model to see how variables interact with each other.
+
+# Bayesian Model Analysis
+
+```{r}
+test_01 <- lm(log(Salary) ~ MP + USG. + MP*USG., data = nba_salary)
+summary(test_01)
+par(mfrow = c(2, 2))
+plot(test_01)
+```
+
+We used BRMS to choose a prior distribution for the data. The model chose a student_t(3, 15.1, 2.5) distribution for the intercept and a student_t(3, 0, 2.5) distribution for sigma. The MP and USG variables have a flat prior, which is an improper distribution, but one that makes no assumption of the distribution.
+
+# BRMS Chosen Prior
+
+```{r}
+get_prior(data = nba_salary,
+          family = gaussian(),
+          log(Salary) ~ MP + USG. + MP*USG.)
+```
+
+# BRMS (First Model)
+
+```{r}
+fit <- brm(data = nba_salary,
+           family = gaussian(),
+           log(Salary) ~ MP + USG. + MP*USG.,
+           sample_prior = TRUE,
+           iter = 3500,
+           warmup = 1000,
+           chains = 4,
+           refresh = 0)
+```
+
+# BRMS Posterior Output Analysis
+
+The posterior distribution does not change very much if the prior changes. This is because we have a large sample size for our data, which means that the data is going to hold the most weight in the posterior distribution.
+
+```{r}
+color_scheme_set("viridis")
+
+plot(fit)
+```
+
+```{r}
+summary(fit)
+```
+
+Note, that we did run an interaction between minutes played and player usage. We decided to keep that in when simulated because before simulation we found that the interaction was significant, but now it was not in the posterior. We did not find this out until after the simulation was ran, but we kept because it's notable that minutes played and usage, while correlated, it's interaction was not significant to the log salary.
+
+```{r}
+color_scheme_set("purple")
+
+pp_check(fit, ndraw = 100)
+```
+
+Simulated distributions follow a similar distribution with the actual curve. The actual curve has some strange curves due to the salary.
+
+```{r}
+pairs(fit)
+```
+
+From this plot we can see that minutes played has a positive correlation with the usage rate. This is expected as generally players with a high minutes played will have a larger usage rate.
+
+```{r}
+mcmc_dens_overlay(fit, pars = vars(b_Intercept, b_MP, b_USG., sigma))
+```
+
+Looking good so far! The chains are very close to each other here.
+
+```{r}
+neff_ratio(fit)[c("b_Intercept", "b_MP", "b_USG.", "sigma")]
+```
+
+```{r}
+neff_ratio(fit)[c("b_Intercept", "b_MP", "b_USG.", "sigma")] |> 
+  mcmc_neff() +
+  yaxis_text(hjust = 0) 
+```
+
+Looks good.
+
+```{r}
+mcmc_intervals(fit,
+               pars = c("b_MP"),
+               prob = 0.5,
+               prob_outer = 0.98)
+```
+
+MP is a positive coefficent, just like before the simulation.
+
+```{r}
+color_scheme_set("teal")
+
+mcmc_areas(fit,
+           pars = c("b_MP"),
+           prob = 0.5,
+           point_est = "median")
+mcmc_areas(fit,
+           pars = c("b_MP"),
+           prob = 0.8,
+           point_est = "median")
+mcmc_areas(fit,
+           pars = c("b_MP"),
+           prob = 0.98,
+           point_est = "median")
+```
+
+Possibly may have some negative simulated values, but more positive.
+
+```{r}
+mcmc_intervals(fit,
+               pars = c("b_USG."),
+               prob = 0.5,
+               prob_outer = 0.98)
+```
+
+Surprisingly the coefficient for Usage is negative. Not very strong as usage has a range from 0 to 100, and most players have below 50 so not as big of an effect.
+
+```{r}
+color_scheme_set("teal")
+
+mcmc_areas(fit,
+           pars = c("b_USG."),
+           prob = 0.5,
+           point_est = "median")
+mcmc_areas(fit,
+           pars = c("b_USG."),
+           prob = 0.8,
+           point_est = "median")
+mcmc_areas(fit,
+           pars = c("b_USG."),
+           prob = 0.98,
+           point_est = "median")
+```
+
+```{r}
+posterior = fit |>
+  spread_draws(b_Intercept, sigma)
+
+posterior |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_mean = fit |>
+  spread_draws(b_Intercept) |>
+  rename(Intercept_y = b_Intercept)
+
+posterior_mean |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_sigma = fit |>
+  spread_draws(sigma) |>
+  rename(sigma_y = sigma)
+
+posterior_sigma |> head(10) |> kbl() |> kable_styling()
+```
+
+# Posterior Population Analysis
+
+```{r}
+quantile(posterior$b_Intercept, c(0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99))
+```
+
+There is a 50% chance that the population mean salary is between $e^{13.87}$ and $e^{14.38}$ dollars. There is an 80% chance that the population mean salary is between $e^{13.63}$ and $e^{14.64}$ dollars. There is a 98% chance that the population mean salary is between $e^{13.23}$ and $e^{15.04}$ dollars.
+
+$e^{13.23}$ is roughly around 556,821.5 dollars and $e^{15.04}$ is roughly around 3,402,429 dollars
+
+```{r}
+quantile(posterior$sigma, c(0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99))
+```
+
+There is a 50% chance that the population SD of salary is between $e^{1.17}$ and $e^{1.22}$ dollars. There is an 80% chance that the population SD of salary is between $e^{1.14}$ and $e^{1.25}$ dollars. There is an 98% chance that the population SD of salary is between $e^{1.11}$ and $e^{1.29}$ dollars.
+
+$e^{1.11}$ is roughly around 3.03 dollars and $e^{1.29}$ is roughly around 3.63 dollars. This is a little strange, but since we transformed our response, the standard deviation likely wasn't as varied transformed.
+
+# Stephen Curry Posterior Analysis (Model 1)
+
+```{r}
+posterior_steph = fit |>
+  spread_draws(b_Intercept, b_MP, b_USG., `b_MP:USG.`, sigma) |>
+  mutate(Steph_y = b_Intercept + 
+           b_MP * 34.7 + 
+           b_USG. * 31.0 + 
+           `b_MP:USG.` * 34.7 * 31.0)
+
+posterior_steph |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_steph |>
+  ggplot(aes(x = Steph_y)) +
+  stat_halfeye(.width = c(0.80, 0.98),
+               fill = bayes_col["posterior"]) +
+  theme_bw()
+```
+
+```{r}
+quantile(posterior_steph$Steph_y, c(0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99))
+```
+
+There is a 50% chance that the salary of a player with Stephen Curry’s USG and MP is between $e^{17.031}$ and $e^{17.258}$ dollars. There is an 80% chance that the salary of a player with Stephen Curry’s USG and MP is between $e^{16.926}$ and $e^{17.361}$ dollars. There is a 98% chance that the salary of a player with Stephen Curry’s USG and MP is between $e^{16.747}$ and $e^{17.533}$ dollars.
+
+In other words for the 98% credible interval, there is a 98% chance that the salary of a player with Stephen Curry’s USG and MP is between 18,755,545 and 41,160,927 dollars. This is a really accurate prediction, especially since Stephen Curry's salaries is the highest in the data set.
+
+# Davion Mitchell Posterior Analysis (Model 1)
+
+We then inspected a player in the middle of the list, Davion Mitchell who plays a decent amount of games and is a reasonably average NBA player to analyze.
+
+```{r}
+posterior_davion = fit |>
+  spread_draws(b_Intercept, b_MP, b_USG., `b_MP:USG.`, sigma) |>
+  mutate(Davion_y = b_Intercept + 
+           b_MP * 14.1 + 
+           b_USG. * 31.0 + 
+           `b_MP:USG.` * 14.1 * 31.0)
+
+posterior_davion |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_davion |>
+  ggplot(aes(x = Davion_y)) +
+  stat_halfeye(.width = c(0.80, 0.98),
+               fill = bayes_col["posterior"]) +
+  theme_bw()
+```
+
+```{r}
+quantile(posterior_davion$Davion_y, c(0.01, 0.10, 0.25, 0.50, 0.75, 0.90, 0.99))
+```
+
+There is a 50% chance that the salary of a player with Davion Mitchell’s USG and MP is between $e^{14.354}$ and $e^{14.590}$ dollars. There is an 80% chance that the salary of a player with Davion Mitchell’s USG and MP is between $e^{14.250}$ and $e^{14.698}$ dollars. There is a 98% chance that the salary of a player with Davion Mitchell’s USG and MP is between $e^{14.070}$ and $e^{14.866}$ dollars.
+
+For the 98% credible interval, there is a 98% chance that the salary of a player with Davion Mitchell’s USG and MP is between 1,289,803 and 2,859,050 dollars. This is a pretty accurate prediction to his actual salary.
+
+# BRMS (Model 2)
+
+We did another analysis below for both Stephen Curry and Davion Mitchell. We saw that Davion Mitchell had a lot more games played than Stephen Curry but had significantly lower pay. We wanted to see if games played had more of an effect on players like Davion, but would not players with higher stats like Curry.
+
+Will only look at the 98% credible interval for this analysis.
+
+```{r}
+test_02 <- lm(log(Salary) ~ MP + USG. + GP + MP*USG., data = nba_salary)
+summary(test_02)
+par(mfrow = c(2, 2))
+plot(test_02)
+```
+
+```{r}
+fit_2 <- brm(data = nba_salary,
+           family = gaussian(),
+           log(Salary) ~ MP + USG. + GP + MP*USG.,
+           sample_prior = TRUE,
+           iter = 3500,
+           warmup = 1000,
+           chains = 4,
+           refresh = 0)
+```
+
+```{r}
+summary(fit_2)
+```
+
+```{r}
+color_scheme_set("purple")
+
+pp_check(fit_2, ndraw = 100)
+```
+
+A little more off than model 1 ppcheck.
+
+```{r}
+pairs(fit_2)
+```
+
+From this plot we can see that minutes played still has a positive correlation with the usage rate. Both minutes played and usage rate is independent of games played.
+
+# Stephen Curry Posterior Analysis (Model 2)
+
+```{r}
+posterior_steph_2 = fit_2 |>
+  spread_draws(b_Intercept, b_MP, b_USG., b_GP, `b_MP:USG.`, sigma) |>
+  mutate(Steph_y = b_Intercept + 
+           b_MP * 34.7 + 
+           b_USG. * 31.0 + 
+           b_GP * 56 +
+           `b_MP:USG.` * 34.7 * 31.0)
+
+posterior_steph_2 |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_steph_2 |>
+  ggplot(aes(x = Steph_y)) +
+  stat_halfeye(.width = c(0.80, 0.98),
+               fill = bayes_col["posterior"]) +
+  theme_bw()
+```
+
+```{r}
+quantile(posterior_steph_2$Steph_y, c(0.01, 0.99))
+```
+
+There is a 98% chance that the salary of a player with Stephen Curry’s USG, MP, and GP is between $e^{16.56}$ and $e^{17.29}$ dollars.
+
+There is a 98% chance that a player with Stephen Curry's stats will have a predicted salary of 15,556,669 to 32,130,940 dollars. This seems more incorrect as Curry has a salary closer to 40 million dollars, but reasonable when it comes to number of games played. Curry is an outlier in terms of salary, so this prediction makes sense.
+
+# Davion Mitchell Posterior Analysis (Model 2)
+
+```{r}
+posterior_davion_2 = fit_2 |>
+  spread_draws(b_Intercept, b_MP, b_USG., b_GP, `b_MP:USG.`, sigma) |>
+  mutate(Davion_y = b_Intercept + 
+           b_MP * 14.1 + 
+           b_USG. * 31.0 + 
+           b_GP * 80 +
+           `b_MP:USG.` * 14.1 * 31.0)
+
+posterior_davion_2 |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+posterior_davion_2 |>
+  ggplot(aes(x = Davion_y)) +
+  stat_halfeye(.width = c(0.80, 0.98),
+               fill = bayes_col["posterior"]) +
+  theme_bw()
+```
+
+```{r}
+quantile(posterior_davion_2$Davion_y, c(0.01, 0.99))
+```
+
+There is a 98% chance that the salary of a player with Davion Mitchell’s USG, MP, and GP is between $e^{15.35}$ and $e^{16.28}$ dollars.
+
+In other words, there is a 98% chance that a player with Davion Mitchell's stats will have a predicted salary of 4,638,956 to 11,757,478 dollars. This seems more incorrect as Mitchell has a salary closer to 1 million dollars. Games played doesn't mean a player gets paid more, but this model will over predicted players who have been in a lot of games. Davion Mitchell is an outlier in terms of the games played.
+
+# Conclusion
+
+Based on the credible intervals we obtained, our model only using minutes played and usage rate produces a closer prediction to the actual salary values. After including games played in our model, our predictions fell further from the actual numbers. Although, we attempted to include more variables, our predictions became more off because these variables don't describe salary behavior as well.
+
+One shortcoming we saw of our chosen model is that it isn't not highly descriptive and doesn't a describe the wide range of individual player statistics. For example is that certain players will have a lot of minutes played per game, has a high usage rate, but only one game played and not be paid over one million dollars. Their salary will be over predicted.
+
+There is one point in Handout 27 Model Comparison that Professor Ross points out about a simple model versus a complex model. "However, we don’t always want to just choose the more complex model. Always choosing the more complex model over fits the data." As we saw with our more complex model which included games played, it did over fit Davion Mitchell's salary significance, despite being considered what would be an average player with an average players stats. So for this analysis we focused on minutes played (MP) and usage rate (USG), since we believed salaries would be affected the most significantly by these statistics and would describe salaries within the data set the best.
+
+One thing we considered while concluding this report is the popularity of each player that was not mentioned in this data set. Many increases in salaries include outside variables such as endorsements, brand deals, and other marketability each player has. Player statistics is one aspect of salary, but outside influence could have much more effect and should be furthered analyzed.
+
+Relating and concluding our research with the Bayesian perspective, we found that our Bayesian analysis was valuable in our context since the salaries of players are constantly changing every season. It would be inaccurate to state our parameters without looking at the data. This Bayesian analysis approach allowed us to account for the always-changing landscape of basketball salaries.
+
+# BRMS Untransformed Response Model
+
+Down below is our first model with no transformation. Although this model could be used, we found that a normal distribution in BRMS would've lead to an easier interpretation.
+
+```{r}
+fit_brms_prior_3 <- brm(data = nba_salary,
+           family = exponential(),
+           Salary ~ MP + USG.,
+           sample_prior = TRUE,
+           iter = 3500,
+           warmup = 1000,
+           chains = 4,
+           refresh = 0)
+```
+
+```{r}
+color_scheme_set("viridis")
+
+par(mfrow = c(2, 2))
+plot(fit_brms_prior_3)
+```
+
+```{r}
+summary(fit_brms_prior_3)
+```
+
+```{r}
+color_scheme_set("purple")
+
+pp_check(fit_brms_prior_3, ndraw = 100)
+```
+
+Similarly, simulated distributions follow a similar distribution with the actual curve. But again, the actual curve has some strange curves due to the salary.
+
+```{r}
+summary(fit_brms_prior_3)
+```
