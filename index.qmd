@@ -8,8 +8,6 @@ about:
       href: https://www.linkedin.com/in/adam-cw-kong/
     - text: GitHub
       href: https://github.com/Adam-AKong
-    - text: Email
-      href: mailto::aakong@calpoly.edu
 ---
 
 ::: {#hero-heading}
