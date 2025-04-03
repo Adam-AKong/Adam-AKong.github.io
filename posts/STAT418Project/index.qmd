@@ -6,4 +6,14 @@ categories: [Project]
 image: stat418.png
 ---
 
+# SAT Categorical Analysis
+
+This study aimed to identify key factors influencing state-level SAT performance in the United States using logistic regression. The primary focus was on predicting whether a state had an average SAT score above 925 (HighSAT), based on various demographic, financial, and educational variables. The dataset included factors like SAT participation rates (TAKERS), median family income (INCOME), years of formal education (YEARS), public school attendance (PUBLIC), state expenditure per student (EXPEND), and regional differences (REGION).
+
+Key findings from the analysis showed that factors such as TAKERS, PUBLIC, and EXPEND significantly contributed to high SAT performance. For instance, states with higher public school attendance and greater state expenditure per student were more likely to achieve a higher average SAT score. The study also encountered challenges with multicollinearity, especially between EXPEND and RANK, but through model selection, RANK was excluded from the final model.
+
+The final model suggested that the percentage of students taking the SAT, the percentage attending public schools, and the amount spent on education per student were the most significant predictors of a state achieving a SAT average above 925. The study also provided a model for predicting the likelihood of a state achieving a high SAT score based on these variables.
+
+Improvements to the study could include breaking the SAT performance variable into more categories, incorporating individual-level data, and adding variables related to SAT preparation resources, which could further enhance the model's accuracy.
+
 <embed src="STAT418_PROJECT.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

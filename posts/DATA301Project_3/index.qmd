@@ -6,4 +6,16 @@ categories: [Project]
 image: brawlstars.png
 ---
 
+# **Understanding Brawler Performance and Classification in Brawl Stars**
+
+In this analysis, I explored different machine learning models to classify brawler rarity and class in *Brawl Stars*. Using a k-nearest neighbors (KNN) approach, I found that the best-performing models used **K = 49 for classifying rarity** and **K = 48 for classifying class**. While decision trees could have been a viable alternative, I opted for KNN because it provided more specificity in predicting rarity and class without introducing additional complexity.
+
+I initially attempted **K-means clustering and hierarchical clustering**, but my program crashed due to excessive RAM usage. Given that I already knew the response variables, I realized that using unsupervised learning techniques was unnecessary—supervised methods were more appropriate for this classification task. In addition to classification, I also performed a **regression analysis on predicted trophy counts** for each brawler, first without explicitly naming the brawler and then including the brawler as a predictor.
+
+The central question driving this analysis was whether a trend exists between **player performance and brawler choice**. Specifically, do players who use higher-rarity brawlers—such as **Legendary, Mythic, or Epic**—tend to perform better? The data suggests that these brawlers are indeed more commonly used, which aligns with expectations. However, the model struggled to accurately predict **Damage Dealers and Supports**, likely due to fewer examples of these classes in the dataset. This observation aligns with the game's meta, where **Artillery, Assassins, Controllers, Marksmen, and Tanks** tend to be more mechanically engaging and viable in competitive play. In contrast, **Damage Dealers and Supports** often have lower survivability and fewer unique mechanics, making them less prevalent.
+
+Through various classification models, I identified **trophies, rarity, class, power, and the number of gadgets** as key predictors for brawler classification. Notably, **power level (maxed at 11) and the number of gadgets (maxed at 2)** emerged as particularly relevant features.
+
+While the classification accuracy remained below 50%, the ability to **effectively categorize 86 brawlers across six rarities and seven class types** using only an API, Google Colab, and real-time data is a significant achievement. The continuously updating nature of the dataset makes this an ongoing and dynamic area of exploration, with potential for further refinement and deeper insights into player behavior and game balance.
+
 <embed src="DATA301_PROJECT_3.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

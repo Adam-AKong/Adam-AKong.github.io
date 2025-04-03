@@ -6,4 +6,80 @@ categories: [Project]
 image: supercell.png
 ---
 
+# Analyzing Clan Structures in Supercell Games: Clash Royale, Clash of Clans, and Brawl Stars
+
+Competitive gaming has evolved beyond individual skill—team dynamics and clan structures now play a crucial role in determining success. Supercell’s trio of popular mobile games—Clash Royale, Clash of Clans, and Brawl Stars—each feature clan-based systems where players group together for strategic advantages. But how important is clan membership in determining a group’s ranking? Do the most successful clans always maintain full rosters? And how do these games compare in terms of player demographics and group behavior?
+
+Using publicly available data from Supercell’s APIs, I set out to explore these questions by analyzing clan structures, ranking trends, and regional distributions across the three games.
+
+## **Why This Analysis?**
+
+Initially, I considered analyzing music data, but the API I explored proved cumbersome and less engaging than I had hoped. I wanted a dataset that was rich, dynamic, and relevant to a competitive online space. Supercell’s APIs provided exactly that—real-time data on player rankings, clan structures, and global distributions.
+
+I focused on clan-based data for two key reasons. First, from a player’s perspective, clans are essential in these games, providing access to exclusive events, rewards, and competitive advantages. Second, I was curious about whether highly ranked clans always operated at full capacity or if some had more flexible membership policies.
+
+While one limitation of my analysis was the inability to merge datasets across games due to differing player IDs, this reflects a common challenge in real-world data science—datasets rarely align perfectly, and preprocessing is often required to draw meaningful insights.
+
+## **Data Sources and Methodology**
+
+To conduct this analysis, I retrieved data from three Supercell APIs:
+
+-   Brawl Stars API
+
+-   Clash Royale API
+
+-   Clash of Clans API
+
+Each API provides JSON-formatted data that includes individual player statistics, clan memberships, ranking distributions, and regional data. I specifically extracted information related to clan sizes, rankings, and geographic distributions, allowing for a comparative analysis across the three games.
+
+## **Observations and Key Findings**
+
+One of the most striking observations from the analysis is that top-ranking clans in **all three games** tend to have the maximum number of members. However, an interesting exception appears in **Clash of Clans**, where some high-ranking clans operate with as few as 38 members—well below the full capacity of 50. This suggests that while clan membership is valuable, some elite clans may prioritize quality over quantity, maintaining strict recruitment standards rather than simply filling available spots.
+
+In contrast, **Clash Royale** exhibits a much more consistent pattern—nearly all top-ranking clans are at full capacity (50 members). This makes sense given the game’s structure, where clan participation directly influences rewards through events like Clan Wars. **Brawl Stars**, meanwhile, follows a similar trend, with most successful clubs operating near their member limit.
+
+### **Regional Demographics and Player Distribution**
+
+Another significant finding is the difference in regional player distributions across the games. The **majority of randomly selected Clash Royale players** did not disclose their location, suggesting a more globally distributed player base. Meanwhile, **Clash of Clans players were more likely to be from Southeast Asia**, indicating stronger regional engagement in specific markets.
+
+The data also suggests that the most competitive clans, regardless of game, maintain active participation levels. While fluctuations in membership are common, the best-performing groups tend to remain near full capacity.
+
+## **Data Processing and Cleaning**
+
+To ensure meaningful analysis, I capped my dataset at **500 observations**, requiring that each clan have at least **10 members**. This helped differentiate between active and inactive clans while keeping the dataset manageable.
+
+Key variables included:
+
+-   Clan **tag, name, type, and required trophies**
+
+-   **Location data** (region, country name, and country code)
+
+-   **Membership count**
+
+Since Clash of Clans and Clash Royale shared many of these attributes, they provided a useful basis for comparison. I also created a new **"game" variable** to track which game each data point came from.
+
+In terms of data transformation, the only major adjustment involved **grouping** and **unstacking** membership counts to summarize averages. Beyond that, I avoided excessive summarization to retain as much original detail as possible.
+
+## **Final Thoughts**
+
+This analysis reinforces the idea that successful clans in Supercell games tend to operate at or near full capacity, with slight variations depending on game mechanics. While **Clash Royale** and **Brawl Stars** see more rigidly structured, full-capacity top-tier clans, **Clash of Clans** exhibits more flexibility, allowing for high-ranking clans with smaller member counts.
+
+From a demographic perspective, **Clash Royale appears to have a more globally dispersed player base**, while **Clash of Clans shows stronger regional concentrations, particularly in Southeast Asia**.
+
+The findings also highlight a broader takeaway about competitive gaming communities—clan membership matters, but the exact nature of its importance varies depending on the structure of the game. In games where clans directly influence progression (such as Clash Royale’s Clan Wars), maintaining a full roster is crucial. In contrast, in games like Clash of Clans, where individual skill and attack strategies play a larger role, clans may operate effectively even with a slightly reduced membership.
+
+## **Citations**
+
+-   OpenAI. ChatGPT. 2024. <https://chat.openai.com>
+
+-   Google DeepMind. Gemini. 2024.
+
+-   Todd Motto. Public APIs. GitHub. <https://github.com/toddmotto/public-apis>
+
+-   Supercell. Brawl Stars API Documentation. <https://developer.brawlstars.com/#/>
+
+-   Supercell. Clash Royale API Documentation. <https://developer.clashroyale.com/#/>
+
+-   Supercell. Clash of Clans API Documentation. <https://developer.clashofclans.com/#/>
+
 <embed src="DATA301_PROJECT_2.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

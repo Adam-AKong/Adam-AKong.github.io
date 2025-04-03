@@ -14,13 +14,15 @@ library(bayesplot)
 library(kableExtra)
 library(here)
 
+knitr::opts_chunk$set(echo = FALSE)
+
 bayes_col = c("#56B4E9", "#E69F00", "#009E73", "#CC79A7", "#CC79A7")
 names(bayes_col) = c("prior", "likelihood", "posterior", "prior_predict", "posterior_predict")
 
 bayes_lty = c("dashed", "dotted", "solid")
 names(bayes_lty) = c("prior", "likelihood", "posterior")
 
-nba_salary <- read_csv(here::here("docs", "posts", "STAT415Project", "nba_2022-23_all_stats_with_salary.csv"))
+nba_salary <- read_csv(here::here("posts", "STAT415Project", "nba_2022-23_all_stats_with_salary.csv"))
 nba_salary$USG. <- nba_salary$`USG%`
 ```
 

@@ -8,7 +8,7 @@ image: stat545.png
 
 # Multiplayer Videogame Server Queue Simulation
 
-```{r, message=FALSE, warning=FALSE}
+```{r, include=FALSE}
 library(tidyverse)
 library(markovchain) # for plotting state diagram
 library(igraph)
@@ -373,4 +373,4 @@ Again, I believed that the normal distribution was implemented correctly here. B
 
 ## Conclusion
 
-I hope my analytics and my simulation was enough exploration for the scope of this class. I believe my code and output are mostly correct with appropriate changes that go outside of the class. When thinking about Jacksonian Networks, I wasn't expecting to use the transition matrices when changing from queue to queue. The discussion are correct because of the way that Is et them up. And while my code and premise do not align with what it sates on LibreText and Wikipedia. I felt that when I was taking the entirety of STAT 545, I didn't understand the use of learning stochastic processes until I started reading about queuing theory. Especially when it comes to the work place and management and Jackson Networks. It's obvious how management science uses this concept a lot and how they rely on graphs like the ones above. Not only could this work in queues, but call centers, product lines, DMV lines, and so much more. research into other areas I didn't think could be useful to apply towards.
+I hope my analytics and my simulation was enough exploration for the scope of this class. I believe my code and output are mostly correct with appropriate changes that go outside of the class. When thinking about Jacksonian Networks, I wasn't expecting to use the transition matrices when changing from queue to queue. The discussion are correct because of the way that I set them up. And while my code and premise do not align with what it sates on LibreText and Wikipedia. I felt that when I was taking the entirety of STAT 545, I didn't understand the use of learning stochastic processes until I started reading about queuing theory. Especially when it comes to the work place and management and Jackson Networks. It's obvious how management science uses this concept a lot and how they rely on graphs like the ones above. Not only could this work in queues, but call centers, product lines, DMV lines, and so much more. research into other areas I didn't think could be useful to apply towards.

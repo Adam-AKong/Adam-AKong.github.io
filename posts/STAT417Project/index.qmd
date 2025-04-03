@@ -1,5 +1,5 @@
 ---
-title: "Cirrhosis Survival"
+title: "Cirrhosis Survival Analysis"
 author: "Adam Kong"
 date: "2024-03-19"
 categories: [Project]

@@ -3,7 +3,13 @@ title: "Sushi DMAIC Process Improvement"
 author: "Adam Kong"
 date: "2024-12-01"
 categories: [Project]
-image: sushi.png
+image: sushi.jpg
 ---
+
+Kikka Sushi, a leading provider of fresh sushi across the United States since 1986, operates in various businesses, supermarkets, restaurants, universities, and hospitals. It has locations in California Fresh Market, including San Luis Obispo, Pismo Beach, and Solvang. Sushi chefs are expected to quickly prepare high-quality sushi, along with special rolls and party platters.
+
+Sushi rolling speed and quality are crucial to customer satisfaction. Rolling times of 1-2 minutes per roll and 5-7 minutes for packaging and display are ideal. Delays or inconsistencies in these processes lead to bottlenecks, material waste, and customer dissatisfaction. This project aims to improve the sushi rolling process using Lean Six Sigma's DMAIC framework (Define, Measure, Analyze, Improve, Control).
+
+The project's initial findings identified that hand dexterity and ingredient placement order could improve rolling times. These small improvements, though not widely applicable across the organization, can significantly impact overall process efficiency. Recommendations include maintaining clean workstations, reducing distractions, training hand dexterity, and streamlining ingredient measurements.
 
 <embed src="Sushi_DMAIC.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

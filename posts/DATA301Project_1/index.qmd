@@ -1,9 +1,19 @@
 ---
-title: "2020 World Series Research"
+title: "2020 World Series Debate"
 author: "Adam Kong"
 date: "2024-11-08"
 categories: [Project]
 image: 2020dodgers.jpg
 ---
+
+**Was the Dodgers' 2020 World Series Win a Fluke? A Data-Driven Analysis**
+
+Using data from Lahman’s Baseball Database, I analyzed Major League Baseball trends from 1876 to 2020, focusing on wins, league performance, homeruns, and batting averages. Over time, the number of homeruns and total hits have increased, while batting averages have declined—likely due to improved pitching and defensive strategies.
+
+A key question in my analysis was whether the Dodgers' 2020 World Series win was a fluke, given the shortened season. Using Euclidean distances, I compared the 2020 Dodgers to past World Series winners. The results showed that 2020 was an outlier, with distances more than double those of a typical season, suggesting the shortened schedule played a significant role.
+
+While this doesn’t discredit the Dodgers' talent, it does highlight how unique conditions in 2020 contributed to their championship. A fascinating example of how statistical analysis can shed light on sports narratives! ⚾📊 #BaseballStats #MLBAnalysis #Dodgers
+
+With their **EPIC 2024 World Series Win**, this is a very awesome and fitting project.
 
 <embed src="DATA301_PROJECT_1.pdf" type="application/pdf" style="width:100%;height:100vh;"/>

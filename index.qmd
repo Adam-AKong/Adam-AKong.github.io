@@ -1,8 +1,9 @@
 ---
 title: "Adam Kong"
+image: profile_pic.jpg
 about:
   id: hero-heading
-  template: jolla
+  template: solana
   links:
     - text: LinkedIn
       href: https://www.linkedin.com/in/adam-cw-kong/
